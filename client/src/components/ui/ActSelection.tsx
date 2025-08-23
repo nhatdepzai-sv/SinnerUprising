@@ -30,9 +30,24 @@ export function ActSelection() {
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center">
       <div className="max-w-6xl mx-auto p-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">The Path of Vengeance</h1>
-          <p className="text-xl text-gray-300 mb-2">
-            Choose your next target in the divine hierarchy
+          <h1 
+            className="text-4xl font-bold text-white mb-4"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '4px 4px 0px #000000',
+              imageRendering: 'pixelated'
+            }}
+          >
+            THE PATH OF VENGEANCE
+          </h1>
+          <p 
+            className="text-xl text-gray-300 mb-2"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '2px 2px 0px #000000'
+            }}
+          >
+            CHOOSE YOUR NEXT TARGET IN THE DIVINE HIERARCHY
           </p>
           {hasReachedFinalBoss && (
             <p className="text-lg text-red-400">
@@ -47,9 +62,14 @@ export function ActSelection() {
               key={act.id}
               onClick={() => handleActSelect(act)}
               disabled={!act.unlocked}
-              className={`p-6 rounded-lg border-2 transition-all transform hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed disabled:opacity-60 ${
+              className={`p-6 border-2 transition-all transform hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed disabled:opacity-60 ${
                 getActStatusColor(act, index)
               }`}
+              style={{
+                imageRendering: 'pixelated',
+                filter: 'contrast(1.2)',
+                borderRadius: '0px', // Remove rounded corners for pixelated look
+              }}
             >
               <div className="text-center">
                 <h3 className="text-xl font-bold text-white mb-2">{act.title}</h3>

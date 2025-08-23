@@ -81,7 +81,26 @@ export function GameScene() {
   };
   
   return (
-    <div className={`relative w-full h-full overflow-hidden ${getBattleBackground()}`}>
+    <div 
+      className={`relative w-full h-full overflow-hidden ${getBattleBackground()}`}
+      style={{
+        imageRendering: 'pixelated',
+        filter: 'contrast(1.1) saturate(1.2)',
+      }}
+    >
+      {/* Pixelated grid overlay for retro effect */}
+      <div 
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #000 1px, transparent 1px),
+            linear-gradient(to bottom, #000 1px, transparent 1px)
+          `,
+          backgroundSize: '8px 8px',
+          imageRendering: 'pixelated'
+        }}
+      />
+      
       {/* Atmospheric effects */}
       {getAtmosphericEffects()}
       
@@ -106,19 +125,27 @@ export function GameScene() {
         <Boss boss={currentBoss} />
       )}
       
-      {/* Battle phase indicator */}
+      {/* Battle phase indicator - pixelated */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-        <div className="bg-black/80 text-white px-6 py-2 rounded-lg border border-gray-600">
+        <div 
+          className="bg-black/80 text-white px-6 py-2 border border-gray-600"
+          style={{
+            imageRendering: 'pixelated',
+            borderRadius: '0px',
+            fontFamily: 'monospace',
+            textShadow: '2px 2px 0px #000000'
+          }}
+        >
           <div className="text-center">
             <div className="text-lg font-bold text-yellow-400">
-              {combatPhase === 'planning' && 'Planning Phase'}
-              {combatPhase === 'battle' && 'Battle Phase'}
-              {combatPhase === 'resolution' && 'Resolution Phase'}
-              {combatPhase === 'enemy_turn' && 'Enemy Turn'}
+              {combatPhase === 'planning' && 'PLANNING PHASE'}
+              {combatPhase === 'battle' && 'BATTLE PHASE'}
+              {combatPhase === 'resolution' && 'RESOLUTION PHASE'}
+              {combatPhase === 'enemy_turn' && 'ENEMY TURN'}
             </div>
             {currentBoss && (
               <div className="text-sm text-gray-300">
-                vs {currentBoss.name}
+                VS {currentBoss.name.toUpperCase()}
               </div>
             )}
           </div>

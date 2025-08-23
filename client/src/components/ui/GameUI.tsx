@@ -54,14 +54,46 @@ export function GameUI() {
     return (
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
         <div className="text-center text-white">
-          <h1 className="text-5xl font-bold mb-4 text-red-500">Path of Vengeance</h1>
-          <p className="text-2xl mb-4 text-gray-300">An Epic Tale of Betrayal and Revenge</p>
-          <p className="text-lg mb-8 text-gray-400">The gods abandoned you. Now you will make them pay.</p>
+          <h1 
+            className="text-5xl font-bold mb-4 text-red-500"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '4px 4px 0px #000000',
+              imageRendering: 'pixelated'
+            }}
+          >
+            PATH OF VENGEANCE
+          </h1>
+          <p 
+            className="text-2xl mb-4 text-gray-300"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '2px 2px 0px #000000'
+            }}
+          >
+            AN EPIC TALE OF BETRAYAL AND REVENGE
+          </p>
+          <p 
+            className="text-lg mb-8 text-gray-400"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '1px 1px 0px #000000'
+            }}
+          >
+            THE GODS ABANDONED YOU. NOW YOU WILL MAKE THEM PAY.
+          </p>
           <button
             onClick={handleStartGame}
-            className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg text-xl font-semibold transition-colors"
+            className="px-8 py-4 bg-red-600 hover:bg-red-700 text-xl font-semibold transition-colors border-4 border-red-800"
+            style={{
+              imageRendering: 'pixelated',
+              filter: 'contrast(1.2)',
+              borderRadius: '0px',
+              fontFamily: 'monospace',
+              textShadow: '2px 2px 0px #000000'
+            }}
           >
-            Begin Your Quest
+            BEGIN YOUR QUEST
           </button>
         </div>
       </div>
@@ -89,13 +121,27 @@ export function GameUI() {
                 }
                 resetCombat();
               }}
-              className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg text-xl font-semibold transition-colors"
+              className="px-8 py-4 bg-red-600 hover:bg-red-700 text-xl font-semibold transition-colors border-4 border-red-800"
+              style={{
+                imageRendering: 'pixelated',
+                filter: 'contrast(1.2)',
+                borderRadius: '0px',
+                fontFamily: 'monospace',
+                textShadow: '2px 2px 0px #000000'
+              }}
             >
-              Continue the Hunt
+              CONTINUE THE HUNT
             </button>
             <button
               onClick={handleRestartGame}
-              className="px-8 py-4 bg-gray-600 hover:bg-gray-700 rounded-lg text-xl font-semibold transition-colors"
+              className="px-8 py-4 bg-gray-600 hover:bg-gray-700 text-xl font-semibold transition-colors border-4 border-gray-800"
+              style={{
+                imageRendering: 'pixelated',
+                filter: 'contrast(1.2)',
+                borderRadius: '0px',
+                fontFamily: 'monospace',
+                textShadow: '2px 2px 0px #000000'
+              }}
             >
               Start Over
             </button>

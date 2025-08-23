@@ -84,17 +84,44 @@ export function Boss({ boss }: BossProps) {
         {/* Phase effect rings */}
         {getPhaseEffects()}
         
-        {/* Boss main body */}
+        {/* Boss main body - 64-bit style */}
         <div 
-          className={`w-32 h-40 bg-gradient-to-b ${getBossColor()} border-4 border-yellow-400 shadow-2xl relative`}
+          className={`w-32 h-40 bg-gradient-to-b ${getBossColor()} border-4 border-yellow-400 relative`}
           style={{
-            clipPath: 'polygon(20% 0%, 80% 0%, 100% 30%, 100% 70%, 80% 100%, 20% 100%, 0% 70%, 0% 30%)'
+            imageRendering: 'pixelated',
+            filter: 'contrast(1.2) saturate(1.3)',
           }}
         >
-          {/* Boss face/eyes */}
-          <div className="absolute top-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+          {/* Pixelated boss design */}
+          <div className="absolute inset-0 grid grid-cols-8 grid-rows-10 gap-0">
+            {/* Create pixelated pattern */}
+            {Array.from({ length: 80 }).map((_, i) => {
+              const row = Math.floor(i / 8);
+              const col = i % 8;
+              let bgColor = 'transparent';
+              
+              // Boss outline pattern
+              if (row === 0 || row === 9 || col === 0 || col === 7) {
+                bgColor = 'bg-yellow-600';
+              } else if ((row === 2 || row === 3) && (col === 2 || col === 5)) {
+                // Eyes
+                bgColor = 'bg-red-500';
+              } else if (row === 4 && col >= 2 && col <= 5) {
+                // Mouth
+                bgColor = 'bg-black';
+              } else if (row >= 1 && row <= 8) {
+                // Body fill based on boss type
+                bgColor = boss.phase >= 3 ? 'bg-red-900' : boss.phase >= 2 ? 'bg-red-700' : 'bg-purple-600';
+              }
+              
+              return (
+                <div
+                  key={i}
+                  className={`w-full h-full ${bgColor} ${boss.phase >= 2 ? 'animate-pulse' : ''}`}
+                  style={{ imageRendering: 'pixelated' }}
+                />
+              );
+            })}
           </div>
           
           {/* Power aura */}
@@ -110,11 +137,19 @@ export function Boss({ boss }: BossProps) {
           )}
         </div>
         
-        {/* Boss name plate */}
+        {/* Boss name plate - pixelated */}
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-center">
-          <div className="bg-black/80 text-white px-4 py-1 rounded border border-red-500">
-            <div className="text-sm font-bold text-red-400">{boss.name}</div>
-            <div className="text-xs text-gray-300">{boss.title}</div>
+          <div 
+            className="bg-black/80 text-white px-4 py-1 border border-red-500"
+            style={{
+              imageRendering: 'pixelated',
+              borderRadius: '0px',
+              fontFamily: 'monospace',
+              textShadow: '1px 1px 0px #000000'
+            }}
+          >
+            <div className="text-sm font-bold text-red-400">{boss.name.toUpperCase()}</div>
+            <div className="text-xs text-gray-300">{boss.title.toUpperCase()}</div>
           </div>
         </div>
         

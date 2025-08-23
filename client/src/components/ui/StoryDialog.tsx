@@ -53,11 +53,35 @@ export function StoryDialog() {
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
       <div className="max-w-4xl mx-auto p-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">{currentAct.title}</h1>
-          <p className="text-xl text-gray-300">{currentAct.description}</p>
+          <h1 
+            className="text-4xl font-bold text-white mb-2"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '3px 3px 0px #000000',
+              imageRendering: 'pixelated'
+            }}
+          >
+            {currentAct.title.toUpperCase()}
+          </h1>
+          <p 
+            className="text-xl text-gray-300"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '2px 2px 0px #000000'
+            }}
+          >
+            {currentAct.description}
+          </p>
         </div>
         
-        <div className="bg-black/80 border-2 border-red-600 rounded-lg p-6 min-h-[200px] flex flex-col justify-between">
+        <div 
+          className="bg-black/80 border-2 border-red-600 p-6 min-h-[200px] flex flex-col justify-between"
+          style={{
+            imageRendering: 'pixelated',
+            filter: 'contrast(1.2)',
+            borderRadius: '0px', // Remove rounded corners for pixelated look
+          }}
+        >
           <div className="text-white text-lg leading-relaxed mb-4">
             {currentDialogue}
           </div>
@@ -70,16 +94,30 @@ export function StoryDialog() {
             <div className="flex space-x-4">
               <button
                 onClick={skipCutscene}
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors"
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white transition-colors border-2 border-gray-800"
+                style={{
+                  imageRendering: 'pixelated',
+                  filter: 'contrast(1.2)',
+                  borderRadius: '0px',
+                  fontFamily: 'monospace',
+                  textShadow: '1px 1px 0px #000000'
+                }}
               >
-                Skip (ESC)
+                SKIP (ESC)
               </button>
               
               <button
                 onClick={handleContinue}
-                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors border-2 border-red-800"
+                style={{
+                  imageRendering: 'pixelated',
+                  filter: 'contrast(1.2)',
+                  borderRadius: '0px',
+                  fontFamily: 'monospace',
+                  textShadow: '1px 1px 0px #000000'
+                }}
               >
-                {isLastDialogue ? 'Begin Battle' : 'Continue'} (ENTER)
+                {isLastDialogue ? 'BEGIN BATTLE' : 'CONTINUE'} (ENTER)
               </button>
             </div>
           </div>

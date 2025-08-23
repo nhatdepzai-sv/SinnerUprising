@@ -36,30 +36,65 @@ export function Character({ character }: CharacterProps) {
         transform: `translate(${character.position[0]}px, ${character.position[1]}px)`
       }}
     >
-      {/* Character sprite */}
+      {/* Character sprite - 64-bit style */}
       <div 
-        className={`w-12 h-16 bg-gradient-to-b ${getCharacterColor()} border-2 border-gray-300 shadow-lg relative ${
+        className={`w-12 h-16 border-2 border-gray-300 relative ${
           isAnimating ? 'animate-bounce' : ''
         }`}
         style={{
-          clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 100%, 0% 100%, 0% 30%)',
+          imageRendering: 'pixelated',
+          filter: 'contrast(1.2) saturate(1.3)',
           opacity: healthPercentage < 0.3 ? 0.7 : 1
         }}
       >
-        {/* Character face */}
-        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-          <div className="w-1 h-1 bg-black rounded-full" />
-          <div className="w-1 h-1 bg-black rounded-full" />
+        {/* Pixelated character design */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-4 gap-0">
+          {Array.from({ length: 12 }).map((_, i) => {
+            const row = Math.floor(i / 3);
+            const col = i % 3;
+            let bgColor = 'transparent';
+            
+            // Character pixel pattern
+            if (row === 0) {
+              // Head
+              bgColor = character.elementAffinities.includes('dark') ? 'bg-red-800' : 
+                       character.elementAffinities.includes('light') ? 'bg-yellow-400' : 'bg-blue-500';
+            } else if (row === 1 && col === 1) {
+              // Face
+              bgColor = 'bg-pink-200';
+            } else if (row === 1 && (col === 0 || col === 2)) {
+              // Eyes
+              bgColor = 'bg-black';
+            } else if (row >= 2) {
+              // Body
+              bgColor = character.elementAffinities.includes('dark') ? 'bg-gray-800' : 
+                       character.elementAffinities.includes('light') ? 'bg-white' : 'bg-blue-600';
+            }
+            
+            return (
+              <div
+                key={i}
+                className={`w-full h-full ${bgColor}`}
+                style={{ imageRendering: 'pixelated' }}
+              />
+            );
+          })}
         </div>
         
-        {/* Health indicator */}
-        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-gray-800">
+        {/* Health indicator - pixelated */}
+        <div 
+          className="absolute -bottom-1 left-0 right-0 h-1 bg-gray-800"
+          style={{ imageRendering: 'pixelated' }}
+        >
           <div 
             className={`h-full transition-all duration-300 ${
               healthPercentage > 0.5 ? 'bg-green-500' : 
               healthPercentage > 0.2 ? 'bg-yellow-500' : 'bg-red-500'
             }`}
-            style={{ width: `${healthPercentage * 100}%` }}
+            style={{ 
+              width: `${healthPercentage * 100}%`,
+              imageRendering: 'pixelated'
+            }}
           />
         </div>
         
@@ -71,18 +106,32 @@ export function Character({ character }: CharacterProps) {
         )}
       </div>
       
-      {/* Character name */}
+      {/* Character name - pixelated */}
       <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-        <div className="bg-black/60 text-white text-xs px-2 py-1 rounded">
-          {character.name}
+        <div 
+          className="bg-black/60 text-white text-xs px-2 py-1 border border-gray-600"
+          style={{
+            imageRendering: 'pixelated',
+            borderRadius: '0px',
+            fontFamily: 'monospace',
+            textShadow: '1px 1px 0px #000000'
+          }}
+        >
+          {character.name.toUpperCase()}
         </div>
       </div>
       
-      {/* Mana bar */}
-      <div className="absolute -bottom-3 left-0 right-0 h-0.5 bg-blue-900">
+      {/* Mana bar - pixelated */}
+      <div 
+        className="absolute -bottom-3 left-0 right-0 h-0.5 bg-blue-900"
+        style={{ imageRendering: 'pixelated' }}
+      >
         <div 
           className="h-full bg-blue-400 transition-all duration-300"
-          style={{ width: `${(character.currentMana / character.maxMana) * 100}%` }}
+          style={{ 
+            width: `${(character.currentMana / character.maxMana) * 100}%`,
+            imageRendering: 'pixelated'
+          }}
         />
       </div>
       
