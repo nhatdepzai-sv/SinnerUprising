@@ -16,9 +16,9 @@ export function CharacterPanel({ characters }: CharacterPanelProps) {
           <div key={character.id} className="bg-gray-800 p-3 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="font-semibold">{character.name}</span>
-              {character.isStaggered && (
-                <span className="px-2 py-1 bg-purple-600 text-xs rounded">
-                  STAGGERED
+              {character.corruption > 70 && (
+                <span className="px-2 py-1 bg-red-600 text-xs rounded">
+                  CORRUPTED
                 </span>
               )}
             </div>
@@ -45,32 +45,32 @@ export function CharacterPanel({ characters }: CharacterPanelProps) {
               </div>
             </div>
             
-            {/* Stagger bar */}
+            {/* Corruption bar */}
             <div>
               <div className="flex justify-between text-sm text-gray-400 mb-1">
-                <span>Stagger</span>
-                <span>{character.currentStagger}/{character.staggerThreshold}</span>
+                <span>Corruption</span>
+                <span>{character.corruption}/100</span>
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <div
-                  className="h-2 bg-purple-500 rounded-full transition-all duration-300"
+                  className="h-2 bg-red-500 rounded-full transition-all duration-300"
                   style={{
-                    width: `${(character.currentStagger / character.staggerThreshold) * 100}%`
+                    width: `${character.corruption}%`
                   }}
                 />
               </div>
             </div>
             
-            {/* Sin affinities */}
+            {/* Element affinities */}
             <div className="mt-2">
-              <div className="text-xs text-gray-400 mb-1">Sin Affinities</div>
+              <div className="text-xs text-gray-400 mb-1">Element Affinities</div>
               <div className="flex space-x-1">
-                {character.sinAffinities.map((sin, index) => (
+                {character.elementAffinities.map((element: string, index: number) => (
                   <span
                     key={index}
                     className="px-2 py-1 text-xs rounded bg-gray-700 text-gray-300"
                   >
-                    {sin}
+                    {element}
                   </span>
                 ))}
               </div>

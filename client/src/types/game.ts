@@ -1,14 +1,14 @@
-export type SinType = 'wrath' | 'lust' | 'sloth' | 'gluttony' | 'gloom' | 'pride' | 'envy';
+export type ElementType = 'fire' | 'water' | 'earth' | 'air' | 'light' | 'dark' | 'divine';
 export type DamageType = 'slash' | 'pierce' | 'blunt';
 export type ResistanceLevel = 'fatal' | 'ineffective' | 'normal' | 'endured' | 'resistant';
 
 export interface Skill {
   id: string;
   name: string;
-  sinType: SinType;
+  elementType: ElementType;
   damageType: DamageType;
   basePower: number;
-  coinCount: number;
+  manaCost: number;
   description: string;
   effects?: SkillEffect[];
 }
@@ -22,21 +22,25 @@ export interface SkillEffect {
 export interface Character {
   id: string;
   name: string;
+  title: string;
   maxHealth: number;
   currentHealth: number;
-  staggerThreshold: number;
-  currentStagger: number;
-  isStaggered: boolean;
+  maxMana: number;
+  currentMana: number;
+  level: number;
+  corruption: number;
   skills: Skill[];
   resistances: Record<DamageType, ResistanceLevel>;
-  sinAffinities: SinType[];
-  position: [number, number, number];
-  rotation: [number, number, number];
+  elementAffinities: ElementType[];
+  sprite: string;
+  position: [number, number];
 }
 
 export interface Boss {
   id: string;
   name: string;
+  title: string;
+  lore: string;
   maxHealth: number;
   currentHealth: number;
   phase: number;
@@ -44,9 +48,10 @@ export interface Boss {
   skills: Skill[];
   resistances: Record<DamageType, ResistanceLevel>;
   phaseTransitions: BossPhase[];
-  position: [number, number, number];
-  rotation: [number, number, number];
+  sprite: string;
+  position: [number, number];
   scale: number;
+  isDefeated: boolean;
 }
 
 export interface BossPhase {
@@ -65,7 +70,7 @@ export interface CombatAction {
   targetId: string;
 }
 
-export interface ClashResult {
+export interface BattleResult {
   winner: 'character' | 'boss';
   characterSkill: Skill;
   bossSkill: Skill;
@@ -73,7 +78,27 @@ export interface ClashResult {
   bossPower: number;
   damage: number;
   effects: string[];
+  corruptionGained: number;
 }
 
-export type GamePhase = 'menu' | 'character_selection' | 'combat' | 'victory' | 'defeat';
-export type CombatPhase = 'planning' | 'clashing' | 'resolution' | 'enemy_turn';
+export type GamePhase = 'intro' | 'story' | 'combat' | 'victory' | 'defeat' | 'corruption' | 'final_boss';
+export type CombatPhase = 'planning' | 'battle' | 'resolution' | 'enemy_turn';
+
+export interface StoryAct {
+  id: string;
+  title: string;
+  description: string;
+  dialogue: string[];
+  bossId: string;
+  unlocked: boolean;
+  completed: boolean;
+}
+
+export interface GameState {
+  currentAct: number;
+  acts: StoryAct[];
+  protagonist: Character;
+  defeatedGods: string[];
+  corruptionLevel: number;
+  hasReachedFinalBoss: boolean;
+}

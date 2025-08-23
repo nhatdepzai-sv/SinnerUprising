@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useCombat } from '../../lib/stores/useCombat';
 
 export function CombatLog() {
-  const { combatLog, lastClashResult } = useCombat();
+  const { combatLog, lastBattleResult } = useCombat();
   const logRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -25,19 +25,20 @@ export function CombatLog() {
           </div>
         ))}
         
-        {lastClashResult && (
+        {lastBattleResult && (
           <div className="mt-2 p-2 bg-gray-800 rounded">
-            <div className="font-semibold text-yellow-400">Latest Clash:</div>
+            <div className="font-semibold text-yellow-400">Latest Battle:</div>
             <div className="text-sm space-y-1">
-              <div>{lastClashResult.characterSkill.name} vs {lastClashResult.bossSkill.name}</div>
-              <div>Power: {lastClashResult.characterPower} vs {lastClashResult.bossPower}</div>
+              <div>{lastBattleResult.characterSkill.name} vs {lastBattleResult.bossSkill.name}</div>
+              <div>Power: {lastBattleResult.characterPower} vs {lastBattleResult.bossPower}</div>
               <div className={`font-semibold ${
-                lastClashResult.winner === 'character' ? 'text-green-400' : 'text-red-400'
+                lastBattleResult.winner === 'character' ? 'text-green-400' : 'text-red-400'
               }`}>
-                Winner: {lastClashResult.winner === 'character' ? 'Character' : 'Boss'}
+                Winner: {lastBattleResult.winner === 'character' ? 'Character' : 'Boss'}
               </div>
-              <div>Damage: {lastClashResult.damage}</div>
-              {lastClashResult.effects.map((effect, i) => (
+              <div>Damage: {lastBattleResult.damage}</div>
+              {lastBattleResult.corruptionGained > 0 && <div className="text-red-400">Corruption: +{lastBattleResult.corruptionGained}</div>}
+              {lastBattleResult.effects.map((effect: string, i: number) => (
                 <div key={i} className="text-gray-400 text-xs">{effect}</div>
               ))}
             </div>

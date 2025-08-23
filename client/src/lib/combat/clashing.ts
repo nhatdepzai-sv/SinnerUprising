@@ -1,14 +1,14 @@
-import { Skill, ClashResult } from '../../types/game';
+import { Skill, BattleResult } from '../../types/game';
 import { calculateSkillPower } from './skills';
 
-export function resolveClash(
+export function resolveBattle(
   characterSkill: Skill,
   bossSkill: Skill,
-  characterResonance: number = 0,
-  bossResonance: number = 0
-): ClashResult {
-  const characterPower = calculateSkillPower(characterSkill, characterResonance) + rollCoins(characterSkill.coinCount);
-  const bossPower = calculateSkillPower(bossSkill, bossResonance) + rollCoins(bossSkill.coinCount);
+  characterElementBonus: number = 0,
+  bossElementBonus: number = 0
+): BattleResult {
+  const characterPower = calculateSkillPower(characterSkill, characterElementBonus) + rollDice();
+  const bossPower = calculateSkillPower(bossSkill, bossElementBonus) + rollDice();
   
   const winner = characterPower >= bossPower ? 'character' : 'boss';
   const damage = Math.abs(characterPower - bossPower);
@@ -27,6 +27,8 @@ export function resolveClash(
     }
   }
   
+  const corruptionGained = calculateCorruption(characterSkill);
+  
   return {
     winner,
     characterSkill,
@@ -34,19 +36,20 @@ export function resolveClash(
     characterPower,
     bossPower,
     damage,
-    effects
+    effects,
+    corruptionGained
   };
 }
 
-function rollCoins(coinCount: number): number {
-  let total = 0;
-  for (let i = 0; i < coinCount; i++) {
-    // Simple coin flip: 50% chance to add 1 to power
-    if (Math.random() > 0.5) {
-      total += 1;
-    }
-  }
-  return total;
+function rollDice(): number {
+  // Roll a d6 for random power bonus
+  return Math.floor(Math.random() * 6) + 1;
+}
+
+function calculateCorruption(skill: Skill): number {
+  if (skill.elementType === 'dark') return 5;
+  if (skill.elementType === 'light') return -2;
+  return 0;
 }
 
 export function calculateDamage(

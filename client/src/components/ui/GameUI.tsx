@@ -6,6 +6,9 @@ import { BossHealthBar } from './BossHealthBar';
 import { SkillSelector } from './SkillSelector';
 import { CharacterPanel } from './CharacterPanel';
 import { CombatLog } from './CombatLog';
+import { StoryDialog } from './StoryDialog';
+import { ActSelection } from './ActSelection';
+import { useStory } from '../../lib/stores/useStory';
 
 export function GameUI() {
   const { 
@@ -20,55 +23,83 @@ export function GameUI() {
   } = useCombat();
   const { selectedTeam, resetCharacters } = useCharacters();
   const { toggleMute, isMuted } = useAudio();
+  const { isInCutscene, showingDialogue, getCurrentAct, completeAct, resetStory } = useStory();
   
   useEffect(() => {
-    // Auto-start combat for demo
-    if (gamePhase === 'menu' && selectedTeam.length > 0) {
-      startCombat('crimson_apostle');
+    // Auto-start story mode
+    if (gamePhase === 'intro' && selectedTeam.length > 0) {
+      // Game starts in story mode, not directly into combat
     }
-  }, [gamePhase, selectedTeam.length, startCombat]);
+  }, [gamePhase, selectedTeam.length]);
   
   const handleStartGame = () => {
     resetCharacters();
-    startCombat('crimson_apostle');
+    resetStory();
   };
   
   const handleRestartGame = () => {
     resetCombat();
     resetCharacters();
+    resetStory();
   };
   
   const canProcessTurn = selectedActions.length > 0 && !isProcessing && combatPhase === 'planning';
+
+  // Show story dialog if in cutscene
+  if (isInCutscene && showingDialogue) {
+    return <StoryDialog />;
+  }
   
-  if (gamePhase === 'menu') {
+  if (gamePhase === 'intro') {
     return (
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
         <div className="text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Limbus Company</h1>
-          <p className="text-xl mb-8">Turn-Based Tactical RPG</p>
+          <h1 className="text-5xl font-bold mb-4 text-red-500">Path of Vengeance</h1>
+          <p className="text-2xl mb-4 text-gray-300">An Epic Tale of Betrayal and Revenge</p>
+          <p className="text-lg mb-8 text-gray-400">The gods abandoned you. Now you will make them pay.</p>
           <button
             onClick={handleStartGame}
-            className="px-8 py-4 bg-purple-600 hover:bg-purple-700 rounded-lg text-xl font-semibold transition-colors"
+            className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg text-xl font-semibold transition-colors"
           >
-            Start Battle
+            Begin Your Quest
           </button>
         </div>
       </div>
     );
   }
   
+  // Show act selection when not in combat
+  if (gamePhase === 'story') {
+    return <ActSelection />;
+  }
+  
   if (gamePhase === 'victory') {
     return (
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
         <div className="text-center text-white">
-          <h1 className="text-4xl font-bold text-green-400 mb-4">Victory!</h1>
-          <p className="text-xl mb-8">The boss has been defeated!</p>
-          <button
-            onClick={handleRestartGame}
-            className="px-8 py-4 bg-green-600 hover:bg-green-700 rounded-lg text-xl font-semibold transition-colors"
-          >
-            Play Again
-          </button>
+          <h1 className="text-4xl font-bold text-red-400 mb-4">Divine Blood Spilled</h1>
+          <p className="text-xl mb-4">Another god falls to your vengeance!</p>
+          <p className="text-lg mb-8 text-gray-300">Your corruption grows, but so does your power...</p>
+          <div className="space-x-4">
+            <button
+              onClick={() => {
+                const currentAct = getCurrentAct();
+                if (currentAct) {
+                  completeAct(currentAct.id);
+                }
+                resetCombat();
+              }}
+              className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg text-xl font-semibold transition-colors"
+            >
+              Continue the Hunt
+            </button>
+            <button
+              onClick={handleRestartGame}
+              className="px-8 py-4 bg-gray-600 hover:bg-gray-700 rounded-lg text-xl font-semibold transition-colors"
+            >
+              Start Over
+            </button>
+          </div>
         </div>
       </div>
     );

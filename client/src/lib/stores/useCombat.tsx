@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { Boss, CombatAction, ClashResult, CombatPhase, GamePhase } from '../../types/game';
+import { Boss, CombatAction, BattleResult, CombatPhase, GamePhase } from '../../types/game';
 import { bosses, checkPhaseTransition, applyPhaseTransition } from '../combat/bosses';
-import { resolveClash } from '../combat/clashing';
+import { resolveBattle } from '../combat/clashing';
 
 interface CombatState {
   gamePhase: GamePhase;
@@ -10,7 +10,7 @@ interface CombatState {
   currentBoss: Boss | null;
   turnNumber: number;
   selectedActions: CombatAction[];
-  lastClashResult: ClashResult | null;
+  lastBattleResult: BattleResult | null;
   combatLog: string[];
   isProcessing: boolean;
   
@@ -28,12 +28,12 @@ interface CombatState {
 
 export const useCombat = create<CombatState>()(
   subscribeWithSelector((set, get) => ({
-    gamePhase: 'menu',
+    gamePhase: 'intro',
     combatPhase: 'planning',
     currentBoss: null,
     turnNumber: 1,
     selectedActions: [],
-    lastClashResult: null,
+    lastBattleResult: null,
     combatLog: [],
     isProcessing: false,
     
@@ -46,7 +46,7 @@ export const useCombat = create<CombatState>()(
           currentBoss: { ...boss },
           turnNumber: 1,
           selectedActions: [],
-          lastClashResult: null,
+          lastBattleResult: null,
           combatLog: [`Combat begins against ${boss.name}!`],
           isProcessing: false
         });
@@ -68,7 +68,7 @@ export const useCombat = create<CombatState>()(
       const { currentBoss, selectedActions, turnNumber } = get();
       if (!currentBoss || selectedActions.length === 0) return;
       
-      set({ isProcessing: true, combatPhase: 'clashing' });
+      set({ isProcessing: true, combatPhase: 'battle' });
       
       // Simulate turn processing
       setTimeout(() => {
@@ -84,19 +84,19 @@ export const useCombat = create<CombatState>()(
         const characterSkill = {
           id: 'basic_attack',
           name: 'Basic Attack',
-          sinType: 'pride' as const,
+          elementType: 'light' as const,
           damageType: 'slash' as const,
           basePower: 10,
-          coinCount: 2,
+          manaCost: 5,
           description: 'A basic attack'
         };
         
-        const clashResult = resolveClash(characterSkill, bossSkill);
+        const battleResult = resolveBattle(characterSkill, bossSkill);
         
         // Apply damage
         let newBossHealth = boss.currentHealth;
-        if (clashResult.winner === 'character') {
-          newBossHealth = Math.max(0, boss.currentHealth - clashResult.damage);
+        if (battleResult.winner === 'character') {
+          newBossHealth = Math.max(0, boss.currentHealth - battleResult.damage);
         }
         
         const updatedBoss = { ...boss, currentHealth: newBossHealth };
@@ -115,7 +115,7 @@ export const useCombat = create<CombatState>()(
         if (finalBoss.currentHealth <= 0) {
           set({
             currentBoss: finalBoss,
-            lastClashResult: clashResult,
+            lastBattleResult: battleResult,
             gamePhase: 'victory',
             isProcessing: false
           });
@@ -125,7 +125,7 @@ export const useCombat = create<CombatState>()(
         
         set({
           currentBoss: finalBoss,
-          lastClashResult: clashResult,
+          lastBattleResult: battleResult,
           selectedActions: [],
           turnNumber: turnNumber + 1,
           combatPhase: 'planning',
@@ -146,7 +146,7 @@ export const useCombat = create<CombatState>()(
     
     nextPhase: () => {
       const { combatPhase } = get();
-      const phases: CombatPhase[] = ['planning', 'clashing', 'resolution', 'enemy_turn'];
+      const phases: CombatPhase[] = ['planning', 'battle', 'resolution', 'enemy_turn'];
       const currentIndex = phases.indexOf(combatPhase);
       const nextIndex = (currentIndex + 1) % phases.length;
       
@@ -166,12 +166,12 @@ export const useCombat = create<CombatState>()(
     
     resetCombat: () => {
       set({
-        gamePhase: 'menu',
+        gamePhase: 'intro',
         combatPhase: 'planning',
         currentBoss: null,
         turnNumber: 1,
         selectedActions: [],
-        lastClashResult: null,
+        lastBattleResult: null,
         combatLog: [],
         isProcessing: false
       });

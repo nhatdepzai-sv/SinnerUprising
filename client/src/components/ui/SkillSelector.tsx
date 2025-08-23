@@ -25,17 +25,17 @@ export function SkillSelector({ isVisible }: SkillSelectorProps) {
     }
   };
   
-  const getSinColor = (sinType: string) => {
+  const getElementColor = (elementType: string) => {
     const colors = {
-      wrath: 'bg-red-500',
-      lust: 'bg-pink-500',
-      sloth: 'bg-blue-500',
-      gluttony: 'bg-orange-500',
-      gloom: 'bg-purple-500',
-      pride: 'bg-yellow-500',
-      envy: 'bg-green-500'
+      fire: 'bg-red-500',
+      water: 'bg-blue-500',
+      earth: 'bg-green-500',
+      air: 'bg-cyan-500',
+      light: 'bg-yellow-500',
+      dark: 'bg-purple-500',
+      divine: 'bg-white text-black'
     };
-    return colors[sinType as keyof typeof colors] || 'bg-gray-500';
+    return colors[elementType as keyof typeof colors] || 'bg-gray-500';
   };
   
   const getDamageTypeIcon = (damageType: string) => {
@@ -61,11 +61,9 @@ export function SkillSelector({ isVisible }: SkillSelectorProps) {
                 <button
                   key={character.id}
                   onClick={() => setSelectedCharacter(character)}
-                  disabled={character.isStaggered || hasAction}
+                  disabled={hasAction}
                   className={`p-3 rounded-lg border-2 transition-all ${
-                    character.isStaggered 
-                      ? 'bg-gray-700 border-gray-600 text-gray-500 cursor-not-allowed'
-                      : hasAction
+                    hasAction
                       ? 'bg-green-700 border-green-500 text-green-200'
                       : 'bg-gray-800 border-gray-600 hover:border-blue-400 hover:bg-gray-700'
                   }`}
@@ -74,8 +72,8 @@ export function SkillSelector({ isVisible }: SkillSelectorProps) {
                   <div className="text-sm text-gray-400">
                     HP: {character.currentHealth}/{character.maxHealth}
                   </div>
-                  {character.isStaggered && (
-                    <div className="text-xs text-purple-400">STAGGERED</div>
+                  {character.corruption > 50 && (
+                    <div className="text-xs text-red-400">CORRUPTED</div>
                   )}
                   {hasAction && (
                     <div className="text-xs text-green-400">ACTION SELECTED</div>
@@ -107,8 +105,8 @@ export function SkillSelector({ isVisible }: SkillSelectorProps) {
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{skill.name}</span>
                   <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 rounded text-xs text-white ${getSinColor(skill.sinType)}`}>
-                      {skill.sinType.toUpperCase()}
+                    <span className={`px-2 py-1 rounded text-xs text-white ${getElementColor(skill.elementType)}`}>
+                      {skill.elementType.toUpperCase()}
                     </span>
                     <span className="text-lg">{getDamageTypeIcon(skill.damageType)}</span>
                   </div>
@@ -120,7 +118,7 @@ export function SkillSelector({ isVisible }: SkillSelectorProps) {
                 
                 <div className="flex justify-between text-xs text-gray-500">
                   <span>Power: {skill.basePower}</span>
-                  <span>Coins: {skill.coinCount}</span>
+                  <span>Mana: {skill.manaCost}</span>
                 </div>
               </button>
             ))}

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Character } from '../../types/game';
-import { characterSkills } from '../combat/skills';
+import { protagonistSkills } from '../combat/skills';
 
 interface CharacterState {
   availableCharacters: Character[];
@@ -12,33 +12,33 @@ interface CharacterState {
   removeCharacter: (characterId: string) => void;
   clearTeam: () => void;
   updateCharacterHealth: (characterId: string, newHealth: number) => void;
-  updateCharacterStagger: (characterId: string, staggerDamage: number) => void;
+  updateCharacterCorruption: (characterId: string, corruptionGain: number) => void;
   resetCharacters: () => void;
 }
 
-const createCharacter = (id: string, name: string): Character => ({
+const createCharacter = (id: string, name: string, title: string): Character => ({
   id,
   name,
+  title,
   maxHealth: 100,
   currentHealth: 100,
-  staggerThreshold: 30,
-  currentStagger: 0,
-  isStaggered: false,
-  skills: characterSkills[id] || [],
+  maxMana: 50,
+  currentMana: 50,
+  level: 1,
+  corruption: 0,
+  skills: protagonistSkills.pure || [],
   resistances: {
     slash: 'normal',
     pierce: 'normal',
     blunt: 'normal'
   },
-  sinAffinities: ['pride', 'gloom'],
-  position: [0, 0, 0],
-  rotation: [0, 0, 0]
+  elementAffinities: ['light', 'divine'],
+  sprite: 'protagonist',
+  position: [0, 0]
 });
 
 const initialCharacters: Character[] = [
-  createCharacter('yi_sang', 'Yi Sang'),
-  createCharacter('faust', 'Faust'),
-  createCharacter('don_quixote', 'Don Quixote'),
+  createCharacter('protagonist', 'Aiden', 'The Betrayed'),
 ];
 
 export const useCharacters = create<CharacterState>((set, get) => ({
@@ -82,16 +82,15 @@ export const useCharacters = create<CharacterState>((set, get) => ({
     });
   },
   
-  updateCharacterStagger: (characterId: string, staggerDamage: number) => {
+  updateCharacterCorruption: (characterId: string, corruptionGain: number) => {
     const { selectedTeam } = get();
     set({
       selectedTeam: selectedTeam.map(character => {
         if (character.id === characterId) {
-          const newStagger = character.currentStagger + staggerDamage;
+          const newCorruption = Math.max(0, Math.min(100, character.corruption + corruptionGain));
           return {
             ...character,
-            currentStagger: newStagger,
-            isStaggered: newStagger >= character.staggerThreshold
+            corruption: newCorruption
           };
         }
         return character;
@@ -101,11 +100,11 @@ export const useCharacters = create<CharacterState>((set, get) => ({
   
   resetCharacters: () => {
     set({
-      selectedTeam: initialCharacters.slice(0, 3).map(char => ({
+      selectedTeam: initialCharacters.slice(0, 1).map(char => ({
         ...char,
         currentHealth: char.maxHealth,
-        currentStagger: 0,
-        isStaggered: false
+        currentMana: char.maxMana,
+        corruption: 0
       }))
     });
   }
