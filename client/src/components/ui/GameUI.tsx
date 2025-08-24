@@ -9,6 +9,7 @@ import { CombatLog } from './CombatLog';
 import { StoryDialog } from './StoryDialog';
 import { ActSelection } from './ActSelection';
 import { IntroAnimation } from './IntroAnimation';
+import { MapSystem } from './MapSystem';
 import { useStory } from '../../lib/stores/useStory';
 
 export function GameUI() {
@@ -116,6 +117,11 @@ export function GameUI() {
   // Show act selection when not in combat
   if (gamePhase === 'story') {
     return <ActSelection />;
+  }
+  
+  // Show map system
+  if (gamePhase === 'map') {
+    return <MapSystem />;
   }
   
   if (gamePhase === 'victory') {

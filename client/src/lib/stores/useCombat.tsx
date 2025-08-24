@@ -15,7 +15,7 @@ interface CombatState {
   isProcessing: boolean;
   
   // Actions
-  startCombat: (bossId: string) => void;
+  startCombat: (bossId?: string) => void;
   selectAction: (action: CombatAction) => void;
   clearActions: () => void;
   processTurn: () => void;
@@ -24,6 +24,7 @@ interface CombatState {
   addLogEntry: (entry: string) => void;
   clearLog: () => void;
   resetCombat: () => void;
+  setGamePhase: (phase: GamePhase) => void;
 }
 
 export const useCombat = create<CombatState>()(
@@ -37,8 +38,8 @@ export const useCombat = create<CombatState>()(
     combatLog: [],
     isProcessing: false,
     
-    startCombat: (bossId: string) => {
-      const boss = bosses[bossId];
+    startCombat: (bossId?: string) => {
+      const boss = bossId ? bosses[bossId] : bosses['god_of_war'];
       if (boss) {
         set({
           gamePhase: 'combat',
@@ -175,6 +176,10 @@ export const useCombat = create<CombatState>()(
         combatLog: [],
         isProcessing: false
       });
+    },
+    
+    setGamePhase: (phase: GamePhase) => {
+      set({ gamePhase: phase });
     }
   }))
 );

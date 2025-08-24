@@ -3,7 +3,7 @@ import { useStory } from '../../lib/stores/useStory';
 import { StoryAct } from '../../types/game';
 
 export function ActSelection() {
-  const { startCombat } = useCombat();
+  const { startCombat, setGamePhase } = useCombat();
   const { acts, currentAct, startCutscene, hasReachedFinalBoss } = useStory();
   
   const handleActSelect = (act: StoryAct) => {
@@ -100,6 +100,17 @@ export function ActSelection() {
         <div className="text-center mt-8 text-gray-500">
           <p>Your corruption grows with each divine life you take...</p>
           <p>But vengeance demands its price.</p>
+          
+          <button
+            onClick={() => setGamePhase('map')}
+            className="mt-4 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded transition-colors"
+            style={{
+              fontFamily: 'monospace',
+              textShadow: '2px 2px 0px #000000'
+            }}
+          >
+            🗺️ EXPLORE MAP
+          </button>
         </div>
       </div>
     </div>

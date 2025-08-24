@@ -81,7 +81,7 @@ export interface BattleResult {
   corruptionGained: number;
 }
 
-export type GamePhase = 'intro' | 'story' | 'combat' | 'victory' | 'defeat' | 'corruption' | 'final_boss';
+export type GamePhase = 'intro' | 'story' | 'map' | 'combat' | 'victory' | 'defeat' | 'corruption' | 'final_boss';
 export type CombatPhase = 'planning' | 'battle' | 'resolution' | 'enemy_turn';
 
 export interface StoryAct {
