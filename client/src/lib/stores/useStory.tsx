@@ -7,6 +7,7 @@ interface StoryState extends GameState {
   isInCutscene: boolean;
   currentDialogueIndex: number;
   showingDialogue: boolean;
+  hasSeenIntro: boolean;
   
   // Actions
   nextDialogue: () => void;
@@ -18,6 +19,7 @@ interface StoryState extends GameState {
   resetStory: () => void;
   startCutscene: (actId: string) => void;
   getCurrentAct: () => StoryAct | null;
+  markIntroSeen: () => void;
 }
 
 export const useStory = create<StoryState>()(
@@ -27,6 +29,7 @@ export const useStory = create<StoryState>()(
     isInCutscene: false,
     currentDialogueIndex: 0,
     showingDialogue: false,
+    hasSeenIntro: false,
     
     nextDialogue: () => {
       const { currentAct, acts, currentDialogueIndex } = get();
@@ -111,7 +114,8 @@ export const useStory = create<StoryState>()(
       set({ 
         isInCutscene: false,
         currentDialogueIndex: 0,
-        showingDialogue: false
+        showingDialogue: false,
+        hasSeenIntro: false
       });
     },
     
@@ -132,6 +136,10 @@ export const useStory = create<StoryState>()(
     getCurrentAct: () => {
       const { currentAct, acts } = get();
       return acts[currentAct] || null;
+    },
+    
+    markIntroSeen: () => {
+      set({ hasSeenIntro: true });
     }
   }))
 );

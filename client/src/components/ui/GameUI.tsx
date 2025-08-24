@@ -8,6 +8,7 @@ import { CharacterPanel } from './CharacterPanel';
 import { CombatLog } from './CombatLog';
 import { StoryDialog } from './StoryDialog';
 import { ActSelection } from './ActSelection';
+import { IntroAnimation } from './IntroAnimation';
 import { useStory } from '../../lib/stores/useStory';
 
 export function GameUI() {
@@ -23,7 +24,7 @@ export function GameUI() {
   } = useCombat();
   const { selectedTeam, resetCharacters } = useCharacters();
   const { toggleMute, isMuted } = useAudio();
-  const { isInCutscene, showingDialogue, getCurrentAct, completeAct, resetStory } = useStory();
+  const { isInCutscene, showingDialogue, hasSeenIntro, getCurrentAct, completeAct, resetStory, markIntroSeen } = useStory();
   
   useEffect(() => {
     // Auto-start story mode
@@ -48,6 +49,18 @@ export function GameUI() {
   // Show story dialog if in cutscene
   if (isInCutscene && showingDialogue) {
     return <StoryDialog />;
+  }
+  
+  // Show intro animation if not seen yet
+  if (gamePhase === 'intro' && !hasSeenIntro) {
+    return (
+      <IntroAnimation 
+        onComplete={() => {
+          markIntroSeen();
+          handleStartGame();
+        }} 
+      />
+    );
   }
   
   if (gamePhase === 'intro') {
