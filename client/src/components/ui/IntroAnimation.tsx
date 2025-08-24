@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface IntroAnimationProps {
@@ -8,28 +8,45 @@ interface IntroAnimationProps {
 export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   const [currentPhase, setCurrentPhase] = useState(0);
   const [showSkip, setShowSkip] = useState(false);
+  const [isSkipped, setIsSkipped] = useState(false);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
 
-  // Show skip button after 3 seconds
+  // Clear all timers function
+  const clearAllTimers = () => {
+    timersRef.current.forEach(timer => clearTimeout(timer));
+    timersRef.current = [];
+  };
+
+  // Show skip button after 1 second (faster)
   useEffect(() => {
-    const timer = setTimeout(() => setShowSkip(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!isSkipped) {
+      const timer = setTimeout(() => setShowSkip(true), 1000);
+      timersRef.current.push(timer);
+      return () => clearTimeout(timer);
+    }
+  }, [isSkipped]);
 
   // Auto-advance phases
   useEffect(() => {
+    if (isSkipped) return; // Don't run if skipped
+    
     if (currentPhase < 4) {
       const timer = setTimeout(() => {
         setCurrentPhase(prev => prev + 1);
       }, currentPhase === 0 ? 2000 : 4000);
+      timersRef.current.push(timer);
       return () => clearTimeout(timer);
     } else {
       // Animation complete
       const timer = setTimeout(onComplete, 2000);
+      timersRef.current.push(timer);
       return () => clearTimeout(timer);
     }
-  }, [currentPhase, onComplete]);
+  }, [currentPhase, onComplete, isSkipped]);
 
   const handleSkip = () => {
+    setIsSkipped(true);
+    clearAllTimers();
     onComplete();
   };
 
