@@ -63,7 +63,7 @@ export function GameUI() {
     );
   }
   
-  if (gamePhase === 'intro') {
+  if (gamePhase === 'intro' && hasSeenIntro) {
     return (
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
         <div className="text-center text-white">
