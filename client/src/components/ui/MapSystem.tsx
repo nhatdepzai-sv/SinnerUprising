@@ -20,9 +20,9 @@ interface MapNode {
 const mapNodes: MapNode[] = [
   // Starting region - Celestial Gardens
   { id: 'garden_gate', title: 'Garden Gate', description: 'The entrance to the divine realm', type: 'story', x: 50, y: 90, unlocked: true, completed: false, connections: ['garden_fountain'] },
-  { id: 'garden_fountain', title: 'Sacred Fountain', description: 'Where prayers once echoed', type: 'story', x: 50, y: 80, unlocked: false, completed: false, connections: ['garden_boss', 'shop_1'] },
-  { id: 'shop_1', title: 'Divine Armory', description: 'Abandoned weapons of the faithful', type: 'shop', x: 30, y: 70, unlocked: false, completed: false, connections: ['garden_boss'] },
-  { id: 'garden_boss', title: 'Guardian Cherub', description: 'First of the divine guardians', type: 'boss', x: 50, y: 70, unlocked: false, completed: false, connections: ['temple_entrance'], difficulty: 1 },
+  { id: 'garden_fountain', title: 'Sacred Fountain', description: 'Where prayers once echoed', type: 'story', x: 50, y: 80, unlocked: true, completed: false, connections: ['garden_boss', 'shop_1'] },
+  { id: 'shop_1', title: 'Divine Armory', description: 'Abandoned weapons of the faithful', type: 'shop', x: 30, y: 70, unlocked: true, completed: false, connections: ['garden_boss'] },
+  { id: 'garden_boss', title: 'Guardian Cherub', description: 'First of the divine guardians', type: 'boss', x: 50, y: 70, unlocked: true, completed: false, connections: ['temple_entrance'], difficulty: 1 },
   
   // Second region - Sacred Temple
   { id: 'temple_entrance', title: 'Temple Entrance', description: 'Marble halls stained with betrayal', type: 'story', x: 50, y: 60, unlocked: false, completed: false, connections: ['temple_hall', 'gacha_1'] },
@@ -77,19 +77,23 @@ export function MapSystem() {
     switch (selectedNode.type) {
       case 'boss':
         // Start combat with specific boss
-        startCombat();
+        startCombat(selectedNode.id);
         break;
       case 'gacha':
-        // Open gacha system
+        // Open gacha system (placeholder)
+        alert('Gacha system coming soon! Collect powerful characters and equipment.');
         break;
       case 'shop':
-        // Open shop
+        // Open shop (placeholder)
+        alert('Divine Armory coming soon! Upgrade your weapons and abilities.');
         break;
       case 'story':
-        // Play story cutscene
+        // Play story cutscene (placeholder)
+        alert('Story cutscene: ' + selectedNode.description);
         break;
       case 'event':
-        // Trigger special event
+        // Trigger special event (placeholder)
+        alert('Special Event: ' + selectedNode.description);
         break;
     }
     setSelectedNode(null);
@@ -291,7 +295,10 @@ export function MapSystem() {
 
         {/* Back to Story Button */}
         <button
-          onClick={() => window.history.back()}
+          onClick={() => {
+            const { setGamePhase } = useCombat.getState();
+            setGamePhase('story');
+          }}
           className="absolute top-8 left-8 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
         >
           ← Back to Acts

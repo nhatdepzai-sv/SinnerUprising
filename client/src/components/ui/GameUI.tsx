@@ -21,7 +21,8 @@ export function GameUI() {
     processTurn, 
     startCombat, 
     resetCombat,
-    isProcessing 
+    isProcessing,
+    setGamePhase
   } = useCombat();
   const { selectedTeam, resetCharacters } = useCharacters();
   const { toggleMute, isMuted } = useAudio();
@@ -37,12 +38,14 @@ export function GameUI() {
   const handleStartGame = () => {
     resetCharacters();
     resetStory();
+    setGamePhase('story'); // Actually transition to story phase
   };
   
   const handleRestartGame = () => {
     resetCombat();
     resetCharacters();
     resetStory();
+    setGamePhase('intro'); // Go back to intro
   };
   
   const canProcessTurn = selectedActions.length > 0 && !isProcessing && combatPhase === 'planning';
