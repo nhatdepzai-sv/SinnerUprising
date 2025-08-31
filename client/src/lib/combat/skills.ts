@@ -117,8 +117,38 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'slash',
       basePower: 22,
       manaCost: 15,
-      description: 'The burning rage of the war god.',
+      description: 'The burning rage of the war god manifests as blazing slashes.',
       effects: [{ type: 'damage', value: 5, target: 'enemy' }]
+    },
+    {
+      id: 'divine_aegis_shield',
+      name: 'Divine Aegis Shield',
+      elementType: 'light',
+      damageType: 'blunt',
+      basePower: 8,
+      manaCost: 18,
+      description: 'Summons a golden divine shield that absorbs attacks and reflects damage.',
+      effects: [{ type: 'heal', value: 25, target: 'self' }]
+    },
+    {
+      id: 'celestial_sword_strike',
+      name: 'Celestial Sword Strike',
+      elementType: 'light',
+      damageType: 'slash',
+      basePower: 30,
+      manaCost: 25,
+      description: 'A massive golden sword descends from the heavens to strike with divine judgment.',
+      effects: [{ type: 'damage', value: 8, target: 'enemy' }]
+    },
+    {
+      id: 'sacred_prayer_bow',
+      name: 'Sacred Prayer Bow',
+      elementType: 'divine',
+      damageType: 'pierce',
+      basePower: 26,
+      manaCost: 22,
+      description: 'Divine prayer manifests as a spectral bow that shoots light arrows through the target.',
+      effects: [{ type: 'damage', value: 7, target: 'enemy' }]
     },
     {
       id: 'battlefield_dominion',
@@ -127,10 +157,23 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'blunt',
       basePower: 28,
       manaCost: 20,
-      description: 'Controls the entire battlefield with divine might.',
+      description: 'Controls the entire battlefield with divine might, creating fiery craters.',
       effects: [
         { type: 'damage', value: 6, target: 'enemy' },
         { type: 'debuff', value: 2, target: 'enemy' }
+      ]
+    },
+    {
+      id: 'wrath_of_olympus',
+      name: 'Wrath of Olympus',
+      elementType: 'fire',
+      damageType: 'slash',
+      basePower: 35,
+      manaCost: 30,
+      description: 'Channels the combined fury of all Olympian gods into devastating strikes.',
+      effects: [
+        { type: 'damage', value: 10, target: 'enemy' },
+        { type: 'stagger', value: 4, target: 'enemy' }
       ]
     }
   ],
@@ -142,8 +185,38 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'pierce',
       basePower: 20,
       manaCost: 18,
-      description: 'Sees through all deceptions and strikes true.',
+      description: 'All-seeing eyes pierce through illusions and strike with perfect accuracy.',
       effects: [{ type: 'damage', value: 4, target: 'enemy' }]
+    },
+    {
+      id: 'wisdom_barrier',
+      name: 'Wisdom Barrier',
+      elementType: 'light',
+      damageType: 'blunt',
+      basePower: 10,
+      manaCost: 20,
+      description: 'Creates a shimmering barrier of pure knowledge that deflects attacks.',
+      effects: [{ type: 'heal', value: 30, target: 'self' }]
+    },
+    {
+      id: 'divine_spear_rain',
+      name: 'Divine Spear Rain',
+      elementType: 'light',
+      damageType: 'pierce',
+      basePower: 28,
+      manaCost: 24,
+      description: 'Summons countless spears of light from the sky in a devastating rain.',
+      effects: [{ type: 'damage', value: 8, target: 'enemy' }]
+    },
+    {
+      id: 'sacred_prayer_arrow',
+      name: 'Sacred Prayer Arrow',
+      elementType: 'divine',
+      damageType: 'pierce',
+      basePower: 24,
+      manaCost: 22,
+      description: 'A prayer takes form as a glowing arrow that phases through defenses.',
+      effects: [{ type: 'damage', value: 6, target: 'enemy' }]
     },
     {
       id: 'reality_weave',
@@ -152,7 +225,7 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'blunt',
       basePower: 25,
       manaCost: 25,
-      description: 'Manipulates reality itself to crush enemies.',
+      description: 'Manipulates reality itself to create crushing force.',
       effects: [
         { type: 'damage', value: 7, target: 'enemy' },
         { type: 'stagger', value: 3, target: 'enemy' }
@@ -167,7 +240,37 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'blunt',
       basePower: 24,
       manaCost: 20,
-      description: 'The wrath of nature itself.',
+      description: 'The earth itself rises up in massive stone fists to crush enemies.',
+      effects: [{ type: 'damage', value: 6, target: 'enemy' }]
+    },
+    {
+      id: 'bark_skin_shield',
+      name: 'Bark Skin Shield',
+      elementType: 'earth',
+      damageType: 'blunt',
+      basePower: 5,
+      manaCost: 18,
+      description: 'Grows a protective bark armor that absorbs damage.',
+      effects: [{ type: 'heal', value: 35, target: 'self' }]
+    },
+    {
+      id: 'thorn_blade_storm',
+      name: 'Thorn Blade Storm',
+      elementType: 'earth',
+      damageType: 'slash',
+      basePower: 26,
+      manaCost: 24,
+      description: 'Summons a whirlwind of razor-sharp thorn blades from above.',
+      effects: [{ type: 'damage', value: 7, target: 'enemy' }]
+    },
+    {
+      id: 'prayer_of_growth',
+      name: 'Prayer of Growth',
+      elementType: 'earth',
+      damageType: 'pierce',
+      basePower: 22,
+      manaCost: 20,
+      description: 'Sacred prayer causes massive thorny vines to burst from the ground.',
       effects: [{ type: 'damage', value: 6, target: 'enemy' }]
     },
     {
@@ -177,7 +280,7 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'pierce',
       basePower: 18,
       manaCost: 22,
-      description: 'Drains the life force from enemies.',
+      description: 'Drains the life force through root-like tendrils.',
       effects: [
         { type: 'damage', value: 4, target: 'enemy' },
         { type: 'heal', value: 15, target: 'self' }
@@ -192,8 +295,38 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'pierce',
       basePower: 26,
       manaCost: 18,
-      description: 'Devastating lightning that pierces all defenses.',
+      description: 'A devastating bolt of lightning pierces from the storm clouds.',
       effects: [{ type: 'damage', value: 7, target: 'enemy' }]
+    },
+    {
+      id: 'storm_aegis',
+      name: 'Storm Aegis',
+      elementType: 'air',
+      damageType: 'blunt',
+      basePower: 8,
+      manaCost: 20,
+      description: 'A swirling shield of wind and lightning deflects attacks.',
+      effects: [{ type: 'heal', value: 28, target: 'self' }]
+    },
+    {
+      id: 'thunderbolt_lance',
+      name: 'Thunderbolt Lance',
+      elementType: 'air',
+      damageType: 'pierce',
+      basePower: 32,
+      manaCost: 28,
+      description: 'Zeus\'s mighty thunderbolt manifests as a piercing lance of pure energy.',
+      effects: [{ type: 'damage', value: 9, target: 'enemy' }]
+    },
+    {
+      id: 'divine_storm_prayer',
+      name: 'Divine Storm Prayer',
+      elementType: 'divine',
+      damageType: 'slash',
+      basePower: 28,
+      manaCost: 25,
+      description: 'A prayer calls down a localized storm that slashes with wind blades.',
+      effects: [{ type: 'damage', value: 8, target: 'enemy' }]
     },
     {
       id: 'tempest_rage',
@@ -202,7 +335,7 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'slash',
       basePower: 30,
       manaCost: 25,
-      description: 'A hurricane of divine fury.',
+      description: 'A hurricane of divine fury tears through everything.',
       effects: [
         { type: 'damage', value: 8, target: 'enemy' },
         { type: 'debuff', value: 3, target: 'enemy' }
@@ -217,8 +350,38 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'slash',
       basePower: 32,
       manaCost: 22,
-      description: 'Harvests souls with divine authority.',
+      description: 'A spectral scythe harvests souls with divine authority.',
       effects: [{ type: 'damage', value: 9, target: 'enemy' }]
+    },
+    {
+      id: 'underworld_barrier',
+      name: 'Underworld Barrier',
+      elementType: 'dark',
+      damageType: 'blunt',
+      basePower: 6,
+      manaCost: 22,
+      description: 'Creates a barrier of pure darkness and death essence.',
+      effects: [{ type: 'heal', value: 40, target: 'self' }]
+    },
+    {
+      id: 'death_blade_descent',
+      name: 'Death Blade Descent',
+      elementType: 'dark',
+      damageType: 'slash',
+      basePower: 34,
+      manaCost: 30,
+      description: 'A massive blade of death energy descends from the underworld.',
+      effects: [{ type: 'damage', value: 10, target: 'enemy' }]
+    },
+    {
+      id: 'prayer_of_endings',
+      name: 'Prayer of Endings',
+      elementType: 'dark',
+      damageType: 'pierce',
+      basePower: 30,
+      manaCost: 26,
+      description: 'A prayer to death itself manifests as piercing void energy.',
+      effects: [{ type: 'damage', value: 8, target: 'enemy' }]
     },
     {
       id: 'void_embrace',
@@ -227,7 +390,7 @@ export const godSkills: Record<string, Skill[]> = {
       damageType: 'blunt',
       basePower: 35,
       manaCost: 30,
-      description: 'Embraces enemies in the void of death.',
+      description: 'Embraces enemies in the crushing void of absolute death.',
       effects: [
         { type: 'damage', value: 10, target: 'enemy' },
         { type: 'stagger', value: 5, target: 'enemy' }

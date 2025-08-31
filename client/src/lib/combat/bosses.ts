@@ -11,7 +11,7 @@ export const bosses: Record<string, Boss> = {
     currentHealth: 300,
     phase: 1,
     maxPhase: 2,
-    skills: godSkills.god_of_war.slice(0, 1),
+    skills: godSkills.god_of_war.slice(0, 3), // Start with more skills
     resistances: {
       slash: 'endured',
       pierce: 'normal',
@@ -30,7 +30,7 @@ export const bosses: Record<string, Boss> = {
         healthThreshold: 0.5,
         name: 'Wrathful God',
         description: 'Ares erupts in divine fury as his immortal blood is spilled!',
-        newSkills: [godSkills.god_of_war[1]],
+        newSkills: godSkills.god_of_war.slice(3, 6), // Add remaining skills in phase 2
         resistanceChanges: {
           slash: 'normal',
           pierce: 'endured',
@@ -53,7 +53,7 @@ export const bosses: Record<string, Boss> = {
     currentHealth: 250,
     phase: 1,
     maxPhase: 2,
-    skills: godSkills.god_of_wisdom.slice(0, 1),
+    skills: godSkills.god_of_wisdom.slice(0, 3), // Start with more skills
     resistances: {
       slash: 'normal',
       pierce: 'resistant',
@@ -72,7 +72,7 @@ export const bosses: Record<string, Boss> = {
         healthThreshold: 0.4,
         name: 'Desperate Wisdom',
         description: 'Athena realizes the true threat you represent!',
-        newSkills: [godSkills.god_of_wisdom[1]],
+        newSkills: godSkills.god_of_wisdom.slice(3, 5), // Add remaining skills
         resistanceChanges: {
           slash: 'endured',
           pierce: 'normal',
@@ -95,7 +95,7 @@ export const bosses: Record<string, Boss> = {
     currentHealth: 350,
     phase: 1,
     maxPhase: 2,
-    skills: godSkills.god_of_nature.slice(0, 1),
+    skills: godSkills.god_of_nature.slice(0, 3), // Start with more skills
     resistances: {
       slash: 'resistant',
       pierce: 'endured',
@@ -114,7 +114,7 @@ export const bosses: Record<string, Boss> = {
         healthThreshold: 0.3,
         name: 'Primal Fury',
         description: 'The earth shakes as Gaia unleashes primal forces!',
-        newSkills: [godSkills.god_of_nature[1]],
+        newSkills: godSkills.god_of_nature.slice(3, 5), // Add remaining skills
         resistanceChanges: {
           slash: 'normal',
           pierce: 'normal',
@@ -137,7 +137,7 @@ export const bosses: Record<string, Boss> = {
     currentHealth: 400,
     phase: 1,
     maxPhase: 3,
-    skills: godSkills.god_of_storms.slice(0, 1),
+    skills: godSkills.god_of_storms.slice(0, 3), // Start with more skills
     resistances: {
       slash: 'normal',
       pierce: 'normal',
@@ -156,7 +156,7 @@ export const bosses: Record<string, Boss> = {
         healthThreshold: 0.6,
         name: 'Thunderous Rage',
         description: 'The sky darkens as Zeus calls upon the storm!',
-        newSkills: [godSkills.god_of_storms[1]],
+        newSkills: godSkills.god_of_storms.slice(3, 5), // Add remaining skills
         resistanceChanges: {
           slash: 'endured',
           pierce: 'endured',
@@ -191,7 +191,7 @@ export const bosses: Record<string, Boss> = {
     currentHealth: 450,
     phase: 1,
     maxPhase: 2,
-    skills: godSkills.god_of_death.slice(0, 1),
+    skills: godSkills.god_of_death.slice(0, 3), // Start with more skills
     resistances: {
       slash: 'resistant',
       pierce: 'resistant',
@@ -210,7 +210,7 @@ export const bosses: Record<string, Boss> = {
         healthThreshold: 0.3,
         name: 'Death\'s Embrace',
         description: 'Hades reveals the terrible truth of your corruption!',
-        newSkills: [godSkills.god_of_death[1]],
+        newSkills: godSkills.god_of_death.slice(3, 5), // Add remaining skills
         resistanceChanges: {
           slash: 'normal',
           pierce: 'normal',
