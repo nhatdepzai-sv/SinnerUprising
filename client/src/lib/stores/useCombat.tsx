@@ -3,6 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { Boss, CombatAction, BattleResult, CombatPhase, GamePhase, Character } from '../../types/game';
 import { bosses, checkPhaseTransition, applyPhaseTransition } from '../combat/bosses';
 import { resolveBattle } from '../combat/clashing';
+import { useCharacters } from './useCharacters';
 
 interface CombatState {
   gamePhase: GamePhase;
@@ -81,21 +82,16 @@ export const useCombat = create<CombatState>()(
         
         // Find the character's actual skill from their equipment and base skills
         const selectedAction = selectedActions[0];
-        const { selectedTeam } = require('./useCharacters').useCharacters.getState();
-        const character = selectedTeam.find((c: any) => c.id === selectedAction.characterId);
+        const charactersStore = useCharacters.getState();
+        const character = charactersStore.selectedTeam.find((c: any) => c.id === selectedAction.characterId);
         const characterSkill = character?.skills.find((s: any) => s.id === selectedAction.skillId);
         
-        if (!character) {
-          console.error('Character not found:', selectedAction.characterId);
+        if (!character || !characterSkill) {
+          console.error('Character or skill not found:', selectedAction.characterId, selectedAction.skillId);
           set({ isProcessing: false, combatPhase: 'planning' });
           return;
         }
         
-        if (!characterSkill) {
-          console.error('Skill not found:', selectedAction.skillId);
-          set({ isProcessing: false, combatPhase: 'planning' });
-          return;
-        }
         
         const battleResult = resolveBattle(characterSkill, bossSkill);
         
