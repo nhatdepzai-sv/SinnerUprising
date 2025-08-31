@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCombat } from '../../lib/stores/useCombat';
 import { useCharacters } from '../../lib/stores/useCharacters';
 import { useAudio } from '../../lib/stores/useAudio';
@@ -10,9 +10,11 @@ import { StoryDialog } from './StoryDialog';
 import { ActSelection } from './ActSelection';
 import { IntroAnimation } from './IntroAnimation';
 import { MapSystem } from './MapSystem';
+import { WeaponShop } from './WeaponShop';
 import { useStory } from '../../lib/stores/useStory';
 
 export function GameUI() {
+  const [showWeaponShop, setShowWeaponShop] = useState(false);
   const { 
     gamePhase, 
     combatPhase, 
@@ -220,6 +222,13 @@ export function GameUI() {
         )}
         
         <button
+          onClick={() => setShowWeaponShop(true)}
+          className="block w-full px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors"
+        >
+          ⚔️ Weapon Shop
+        </button>
+        
+        <button
           onClick={toggleMute}
           className="block w-full px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
         >
@@ -242,6 +251,12 @@ export function GameUI() {
           <div className="text-xs text-yellow-400 mt-1">Processing...</div>
         )}
       </div>
+      
+      {/* Weapon Shop */}
+      <WeaponShop 
+        isVisible={showWeaponShop} 
+        onClose={() => setShowWeaponShop(false)} 
+      />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { Boss, CombatAction, BattleResult, CombatPhase, GamePhase } from '../../types/game';
+import { Boss, CombatAction, BattleResult, CombatPhase, GamePhase, Character } from '../../types/game';
 import { bosses, checkPhaseTransition, applyPhaseTransition } from '../combat/bosses';
 import { resolveBattle } from '../combat/clashing';
 
@@ -78,27 +78,45 @@ export const useCombat = create<CombatState>()(
         
         // Simple AI: boss selects a random skill
         const bossSkill = boss.skills[Math.floor(Math.random() * boss.skills.length)];
-        const characterAction = selectedActions[0];
         
-        // Find the character's skill
-        // For now, we'll use a placeholder skill resolution
-        const characterSkill = {
-          id: 'basic_attack',
-          name: 'Basic Attack',
-          elementType: 'light' as const,
-          damageType: 'slash' as const,
-          basePower: 10,
-          manaCost: 5,
-          description: 'A basic attack'
-        };
+        // Find the character's actual skill
+        const selectedAction = selectedActions[0];
+        // We'll need to pass the character info differently - for now use hardcoded skills
+        const character = { id: selectedAction.characterId, name: 'Character' };
+        const allSkills = [
+          { id: 'holy_strike', name: 'Holy Strike', elementType: 'light' as const, damageType: 'slash' as const, basePower: 12, manaCost: 10, description: 'A righteous attack' },
+          { id: 'divine_protection', name: 'Divine Protection', elementType: 'light' as const, damageType: 'blunt' as const, basePower: 20, manaCost: 15, description: 'Divine protection' },
+          { id: 'prayer_of_justice', name: 'Prayer of Justice', elementType: 'divine' as const, damageType: 'pierce' as const, basePower: 18, manaCost: 20, description: 'A powerful prayer' }
+        ];
+        const characterSkill = allSkills.find(s => s.id === selectedAction.skillId) || allSkills[0];
+        
+        if (!characterSkill) {
+          console.error('Skill not found:', selectedAction.skillId);
+          set({ isProcessing: false, combatPhase: 'planning' });
+          return;
+        }
         
         const battleResult = resolveBattle(characterSkill, bossSkill);
         
-        // Apply damage
+        // Add combat log entries
+        get().addLogEntry(`${character?.name} uses ${characterSkill.name}!`);
+        get().addLogEntry(`${boss.name} counters with ${bossSkill.name}!`);
+        
+        // Apply damage and update character state
         let newBossHealth = boss.currentHealth;
+        let characterHealthChange = 0;
+        
         if (battleResult.winner === 'character') {
           newBossHealth = Math.max(0, boss.currentHealth - battleResult.damage);
+          get().addLogEntry(`${characterSkill.name} deals ${battleResult.damage} damage!`);
+        } else {
+          // Character takes damage when losing clash
+          characterHealthChange = -battleResult.damage;
+          get().addLogEntry(`${character?.name} takes ${battleResult.damage} damage!`);
         }
+        
+        // Update character health if they took damage
+        // Note: Character health update will be handled by the UI layer for now
         
         const updatedBoss = { ...boss, currentHealth: newBossHealth };
         

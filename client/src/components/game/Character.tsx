@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Character as CharacterType } from '../../types/game';
+import { useCombat } from '../../lib/stores/useCombat';
 
 interface CharacterProps {
   character: CharacterType;
@@ -7,13 +8,16 @@ interface CharacterProps {
 
 export function Character({ character }: CharacterProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const { isProcessing, combatPhase, lastBattleResult } = useCombat();
   
-  // Trigger animation when character takes action
+  // Trigger animation when character takes action or during combat
   useEffect(() => {
-    setIsAnimating(true);
-    const timer = setTimeout(() => setIsAnimating(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (isProcessing || combatPhase === 'battle') {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isProcessing, combatPhase, lastBattleResult]);
   
   // Get character color based on element affinity
   const getCharacterColor = () => {
@@ -38,8 +42,8 @@ export function Character({ character }: CharacterProps) {
     >
       {/* Character sprite - 64-bit style */}
       <div 
-        className={`w-12 h-16 border-2 border-gray-300 relative ${
-          isAnimating ? 'animate-bounce' : ''
+        className={`w-12 h-16 border-2 border-gray-300 relative transition-all duration-300 ${
+          isAnimating ? 'animate-pulse scale-110 animate-bounce' : ''
         }`}
         style={{
           imageRendering: 'pixelated',
