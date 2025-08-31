@@ -79,16 +79,17 @@ export const useCombat = create<CombatState>()(
         // Simple AI: boss selects a random skill
         const bossSkill = boss.skills[Math.floor(Math.random() * boss.skills.length)];
         
-        // Find the character's actual skill
+        // Find the character's actual skill from their equipment and base skills
         const selectedAction = selectedActions[0];
-        // We'll need to pass the character info differently - for now use hardcoded skills
-        const character = { id: selectedAction.characterId, name: 'Character' };
-        const allSkills = [
-          { id: 'holy_strike', name: 'Holy Strike', elementType: 'light' as const, damageType: 'slash' as const, basePower: 12, manaCost: 10, description: 'A righteous attack' },
-          { id: 'divine_protection', name: 'Divine Protection', elementType: 'light' as const, damageType: 'blunt' as const, basePower: 20, manaCost: 15, description: 'Divine protection' },
-          { id: 'prayer_of_justice', name: 'Prayer of Justice', elementType: 'divine' as const, damageType: 'pierce' as const, basePower: 18, manaCost: 20, description: 'A powerful prayer' }
-        ];
-        const characterSkill = allSkills.find(s => s.id === selectedAction.skillId) || allSkills[0];
+        const { selectedTeam } = require('./useCharacters').useCharacters.getState();
+        const character = selectedTeam.find((c: any) => c.id === selectedAction.characterId);
+        const characterSkill = character?.skills.find((s: any) => s.id === selectedAction.skillId);
+        
+        if (!character) {
+          console.error('Character not found:', selectedAction.characterId);
+          set({ isProcessing: false, combatPhase: 'planning' });
+          return;
+        }
         
         if (!characterSkill) {
           console.error('Skill not found:', selectedAction.skillId);

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Character } from '../../types/game';
 import { protagonistSkills } from '../combat/skills';
+import { useWeaponShop } from './useWeaponShop';
 
 interface CharacterState {
   availableCharacters: Character[];
@@ -13,6 +14,8 @@ interface CharacterState {
   clearTeam: () => void;
   updateCharacterHealth: (characterId: string, newHealth: number) => void;
   updateCharacterCorruption: (characterId: string, corruptionGain: number) => void;
+  equipWeapon: (characterId: string, weaponId: string) => void;
+  unequipWeapon: (characterId: string) => void;
   resetCharacters: () => void;
 }
 
@@ -27,6 +30,7 @@ const createCharacter = (id: string, name: string, title: string): Character => 
   level: 1,
   corruption: 0,
   skills: protagonistSkills.pure || [],
+  equippedWeapon: null,
   resistances: {
     slash: 'normal',
     pierce: 'normal',
@@ -98,13 +102,49 @@ export const useCharacters = create<CharacterState>((set, get) => ({
     });
   },
   
+  equipWeapon: (characterId: string, weaponId: string) => {
+    const { selectedTeam } = get();
+    const weaponShop = useWeaponShop.getState();
+    const weapon = weaponShop.inventory.find(w => w.id === weaponId);
+    
+    if (!weapon) return;
+    
+    set({
+      selectedTeam: selectedTeam.map(character => 
+        character.id === characterId 
+          ? { 
+              ...character, 
+              equippedWeapon: weapon,
+              skills: [...protagonistSkills.pure, ...weapon.skills] // Combine base skills with weapon skills
+            }
+          : character
+      )
+    });
+  },
+  
+  unequipWeapon: (characterId: string) => {
+    const { selectedTeam } = get();
+    set({
+      selectedTeam: selectedTeam.map(character => 
+        character.id === characterId 
+          ? { 
+              ...character, 
+              equippedWeapon: null,
+              skills: protagonistSkills.pure // Reset to base skills
+            }
+          : character
+      )
+    });
+  },
+  
   resetCharacters: () => {
     set({
       selectedTeam: initialCharacters.slice(0, 1).map(char => ({
         ...char,
         currentHealth: char.maxHealth,
         currentMana: char.maxMana,
-        corruption: 0
+        corruption: 0,
+        equippedWeapon: null
       }))
     });
   }

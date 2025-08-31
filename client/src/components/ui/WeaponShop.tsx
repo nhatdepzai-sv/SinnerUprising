@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useWeaponShop } from '../../lib/stores/useWeaponShop';
+import { useCharacters } from '../../lib/stores/useCharacters';
 import { Button } from './button';
 import { Card, CardHeader, CardTitle, CardContent } from './card';
 import { Badge } from './badge';
@@ -12,6 +13,7 @@ interface WeaponShopProps {
 
 export function WeaponShop({ isVisible, onClose }: WeaponShopProps) {
   const { availableWeapons, inventory, playerGold, buyWeapon, sellWeapon } = useWeaponShop();
+  const { selectedTeam, equipWeapon, unequipWeapon } = useCharacters();
   const [selectedTab, setSelectedTab] = useState('shop');
 
   if (!isVisible) return null;
@@ -170,6 +172,7 @@ export function WeaponShop({ isVisible, onClose }: WeaponShopProps) {
                             <div className="space-x-2">
                               <Button
                                 variant="outline"
+                                onClick={() => equipWeapon(selectedTeam[0]?.id, weapon.id)}
                                 size="sm"
                                 className="border-blue-600 text-blue-400 hover:bg-blue-900"
                               >

@@ -19,6 +19,20 @@ export interface SkillEffect {
   target: 'self' | 'enemy' | 'all_allies' | 'all_enemies';
 }
 
+export interface Weapon {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  skills: Skill[];
+  statBoosts: {
+    attack: number;
+    defense: number;
+    speed: number;
+  };
+}
+
 export interface Character {
   id: string;
   name: string;
@@ -34,6 +48,7 @@ export interface Character {
   elementAffinities: ElementType[];
   sprite: string;
   position: [number, number];
+  equippedWeapon?: Weapon | null;
 }
 
 export interface Boss {

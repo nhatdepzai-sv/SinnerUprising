@@ -7,8 +7,8 @@ export const bosses: Record<string, Boss> = {
     name: 'Ares',
     title: 'God of War',
     lore: 'The first god you served, now your greatest enemy. His divine armor is stained with the blood of countless battles.',
-    maxHealth: 300,
-    currentHealth: 300,
+    maxHealth: 150, // Nerfed from 300
+    currentHealth: 150,
     phase: 1,
     maxPhase: 2,
     skills: godSkills.god_of_war.slice(0, 3), // Start with more skills
@@ -49,8 +49,8 @@ export const bosses: Record<string, Boss> = {
     name: 'Athena', 
     title: 'Goddess of Wisdom',
     lore: 'She who once guided your tactical mind now sees you as a threat to divine order.',
-    maxHealth: 250,
-    currentHealth: 250,
+    maxHealth: 120, // Nerfed from 250
+    currentHealth: 120,
     phase: 1,
     maxPhase: 2,
     skills: godSkills.god_of_wisdom.slice(0, 3), // Start with more skills
@@ -91,8 +91,8 @@ export const bosses: Record<string, Boss> = {
     name: 'Gaia',
     title: 'Mother Earth',
     lore: 'The earth itself turns against you as nature\'s mother seeks to preserve divine balance.',
-    maxHealth: 350,
-    currentHealth: 350,
+    maxHealth: 180, // Nerfed from 350
+    currentHealth: 180,
     phase: 1,
     maxPhase: 2,
     skills: godSkills.god_of_nature.slice(0, 3), // Start with more skills
@@ -133,8 +133,8 @@ export const bosses: Record<string, Boss> = {
     name: 'Zeus',
     title: 'King of Gods',
     lore: 'The king of gods himself descends to face you, lightning crackling around his divine form.',
-    maxHealth: 400,
-    currentHealth: 400,
+    maxHealth: 200, // Nerfed from 400
+    currentHealth: 200,
     phase: 1,
     maxPhase: 3,
     skills: godSkills.god_of_storms.slice(0, 3), // Start with more skills
@@ -187,8 +187,8 @@ export const bosses: Record<string, Boss> = {
     name: 'Hades',
     title: 'Lord of the Underworld',
     lore: 'The final god stands before you, keeper of death itself. He alone knows the true price of your journey.',
-    maxHealth: 450,
-    currentHealth: 450,
+    maxHealth: 220, // Nerfed from 450
+    currentHealth: 220,
     phase: 1,
     maxPhase: 2,
     skills: godSkills.god_of_death.slice(0, 3), // Start with more skills
@@ -229,8 +229,8 @@ export const bosses: Record<string, Boss> = {
     name: 'Aiden',
     title: 'The God Killer\'s Avatar',
     lore: 'You face yourself - or what you have become. The God Killer\'s corruption has made you its perfect vessel.',
-    maxHealth: 666,
-    currentHealth: 666,
+    maxHealth: 300, // Nerfed from 666
+    currentHealth: 300,
     phase: 1,
     maxPhase: 3,
     skills: [

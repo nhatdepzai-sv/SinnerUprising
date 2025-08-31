@@ -115,7 +115,7 @@ export const godSkills: Record<string, Skill[]> = {
       name: 'Divine Wrath',
       elementType: 'fire',
       damageType: 'slash',
-      basePower: 22,
+      basePower: 15, // Nerfed from 22
       manaCost: 15,
       description: 'The burning rage of the war god manifests as blazing slashes.',
       effects: [{ type: 'damage', value: 5, target: 'enemy' }]
@@ -135,7 +135,7 @@ export const godSkills: Record<string, Skill[]> = {
       name: 'Celestial Sword Strike',
       elementType: 'light',
       damageType: 'slash',
-      basePower: 30,
+      basePower: 20, // Nerfed from 30
       manaCost: 25,
       description: 'A massive golden sword descends from the heavens to strike with divine judgment.',
       effects: [{ type: 'damage', value: 8, target: 'enemy' }]
@@ -145,7 +145,7 @@ export const godSkills: Record<string, Skill[]> = {
       name: 'Sacred Prayer Bow',
       elementType: 'divine',
       damageType: 'pierce',
-      basePower: 26,
+      basePower: 18, // Nerfed from 26
       manaCost: 22,
       description: 'Divine prayer manifests as a spectral bow that shoots light arrows through the target.',
       effects: [{ type: 'damage', value: 7, target: 'enemy' }]
@@ -155,7 +155,7 @@ export const godSkills: Record<string, Skill[]> = {
       name: 'Battlefield Dominion',
       elementType: 'fire',
       damageType: 'blunt',
-      basePower: 28,
+      basePower: 19, // Nerfed from 28
       manaCost: 20,
       description: 'Controls the entire battlefield with divine might, creating fiery craters.',
       effects: [
@@ -168,7 +168,7 @@ export const godSkills: Record<string, Skill[]> = {
       name: 'Wrath of Olympus',
       elementType: 'fire',
       damageType: 'slash',
-      basePower: 35,
+      basePower: 22, // Nerfed from 35
       manaCost: 30,
       description: 'Channels the combined fury of all Olympian gods into devastating strikes.',
       effects: [
