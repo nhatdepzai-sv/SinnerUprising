@@ -130,57 +130,45 @@ export function Character({ character }: CharacterProps) {
   useEffect(() => {
     if (lastBattleResult) {
       if (lastBattleResult.winner === 'character') {
-        // Character wins - enhanced success animation based on skill type
+        // Character wins - trigger enhanced visual effects based on skill type
         const skill = lastBattleResult.characterSkill;
-        let effects = '✨⚡💫';
+        const damage = lastBattleResult.damage;
+        const normalDamage = skill.basePower * 1.5;
+        const isHighDamage = damage > normalDamage / 3;
         
-        const hasHealEffect = skill.effects?.some(effect => effect.type === 'heal');
-        const hasShieldEffect = skill.name.toLowerCase().includes('protection') || 
-                               skill.name.toLowerCase().includes('shield') || 
-                               skill.name.toLowerCase().includes('aegis');
-        
-        // Use equipped weapon type if available
-        const equippedWeapon = character.equippedWeapon;
-        let weaponType = skill.damageType;
-        if (equippedWeapon && equippedWeapon.skills.length > 0) {
-          weaponType = equippedWeapon.skills[0].damageType;
-        }
-        
-        if (hasHealEffect) {
-          effects = '💚🌟💊✨🙏';
-        } else if (hasShieldEffect) {
-          effects = '🛡️✨💎🌟';
-        } else if (weaponType === 'slash') {
-          effects = '⚔️✨💥🌟';
-        } else if (weaponType === 'pierce') {
-          effects = '🏹💫✨';
-        } else if (weaponType === 'blunt') {
-          effects = '💥🔨⭐💢';
-        }
-        
-        if (skill.elementType === 'fire') {
-          effects += '🔥🌋💥';
-        } else if (skill.elementType === 'light') {
-          effects += '☀️💫✨';
-        } else if (skill.elementType === 'dark') {
-          effects += '🌑💀⚡';
-        }
-        
-        setAttackEffect(effects);
+        // Trigger success animation without emojis
         setIsAnimating(true);
+        
+        // Set elemental burst for magic attacks
+        if (skill.elementType === 'light' || skill.elementType === 'dark') {
+          setElementalBurst(skill.elementType);
+          setMagicBurst(true);
+          setTimeout(() => {
+            setMagicBurst(false);
+            setElementalBurst('');
+          }, 1000);
+        }
+        
+        // Trigger critical hit effect for high damage
+        if (isHighDamage) {
+          setCriticalHit(true);
+          setTimeout(() => setCriticalHit(false), 1000);
+        }
+        
+        // Trigger combo effect
+        setComboEffect(true);
+        setTimeout(() => setComboEffect(false), 800);
+        
         setTimeout(() => {
-          setAttackEffect(null);
           setIsAnimating(false);
         }, 2500);
       } else {
-        // Character loses - enhanced damage animation
-        setAttackEffect('💥🔥💢⚡💀');
+        // Character loses - enhanced damage animation without emojis
         setIsShaking(true);
         setDamageNumbers({value: lastBattleResult.damage, id: Date.now()});
         
         // Extended shake animation for impact
         setTimeout(() => setIsShaking(false), 800);
-        setTimeout(() => setAttackEffect(null), 2000);
         setTimeout(() => setDamageNumbers(null), 2500);
       }
     }
@@ -748,25 +736,7 @@ export function Character({ character }: CharacterProps) {
         />
       </div>
       
-      {/* Attack effects */}
-      {attackEffect && (
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="text-2xl animate-bounce">
-            {attackEffect.split('').map((emoji, i) => (
-              <span 
-                key={i}
-                className="inline-block animate-pulse"
-                style={{
-                  animationDelay: `${i * 100}ms`,
-                  animationDuration: '0.8s'
-                }}
-              >
-                {emoji}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Attack effects - removed emoji display, using enhanced visual effects instead */}
       
       {/* Damage numbers */}
       {damageNumbers && (
@@ -783,12 +753,7 @@ export function Character({ character }: CharacterProps) {
         </div>
       )}
       
-      {/* Action indicator */}
-      {isAnimating && !attackEffect && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <div className="text-yellow-400 text-xs animate-ping">⚔️</div>
-        </div>
-      )}
+      {/* Action indicator - removed emoji, using visual effects only */}
       {/* Add custom CSS animations via style attribute */}
       <style>{`
         @keyframes shake {

@@ -36,29 +36,27 @@ export function Boss({ boss }: BossProps) {
         setTimeout(() => {
           setIsCharging(false);
           
-          // Different effects based on boss and skill type
+          // Different effects based on boss and skill type - using visual effects only
           if (boss.id === 'god_of_storms' || skill.elementType === 'air') {
-            setAttackEffect('🌪️💨⚡🌟');
+            // Trigger storm effects without emojis
+            setIsGlowing(true);
           } else if (boss.id === 'god_of_death' || skill.elementType === 'dark') {
             setDarkAura(true);
-            setAttackEffect('🌑⚰️💀🔥💥');
             setTimeout(() => setDarkAura(false), 1500);
           } else {
-            setAttackEffect('🔥💥⚔️🌟');
+            // Generic boss attack - just glow effect
+            setIsGlowing(true);
           }
           
           setIsGlowing(true);
         }, 600);
         
         setTimeout(() => {
-          setAttackEffect(null);
           setIsGlowing(false);
         }, 3000);
       } else {
-        // Boss takes damage - enhanced damage animation
-        setAttackEffect('💢💥🔥💫');
+        // Boss takes damage - enhanced damage animation without emojis
         setDamageNumbers({value: lastBattleResult.damage, id: Date.now()});
-        setTimeout(() => setAttackEffect(null), 1500);
         setTimeout(() => setDamageNumbers(null), 2500);
       }
     }
@@ -266,26 +264,7 @@ export function Boss({ boss }: BossProps) {
         </div>
       </div>
       
-      {/* Boss attack effects */}
-      {attackEffect && (
-        <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="text-4xl animate-pulse">
-            {attackEffect.split('').map((emoji, i) => (
-              <span 
-                key={i}
-                className="inline-block animate-bounce"
-                style={{
-                  animationDelay: `${i * 150}ms`,
-                  animationDuration: '1.2s',
-                  filter: 'drop-shadow(0 0 10px rgba(255, 255, 0, 0.8))'
-                }}
-              >
-                {emoji}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Boss attack effects - removed emoji display, using enhanced visual effects instead */}
       
       {/* Boss damage numbers */}
       {damageNumbers && (
@@ -302,11 +281,11 @@ export function Boss({ boss }: BossProps) {
         </div>
       )}
       
-      {/* Combat state indicators */}
-      {gamePhase === 'combat' && !attackEffect && (
+      {/* Combat state indicators - removed emoji */}
+      {gamePhase === 'combat' && (
         <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
           <div className="text-yellow-400 text-sm animate-pulse">
-            ⚔️ In Combat
+            In Combat
           </div>
         </div>
       )}
