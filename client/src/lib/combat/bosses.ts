@@ -308,6 +308,264 @@ export const bosses: Record<string, Boss> = {
     scale: 2.8,
     sprite: 'final_boss',
     isDefeated: false
+  },
+  corrupted_self: {
+    id: 'corrupted_self',
+    name: 'Your Corrupted Soul',
+    title: 'The Shadow Within',
+    lore: 'You face the part of yourself that was consumed by the God Killer\'s influence. Can you overcome your own darkness?',
+    maxHealth: 180,
+    currentHealth: 180,
+    phase: 1,
+    maxPhase: 2,
+    skills: [
+      {
+        id: 'self_doubt',
+        name: 'Self Doubt',
+        elementType: 'dark',
+        damageType: 'blunt',
+        basePower: 20,
+        manaCost: 15,
+        description: 'Attacks with your own insecurities and fears.'
+      },
+      {
+        id: 'corrupted_memory',
+        name: 'Corrupted Memory',
+        elementType: 'dark',
+        damageType: 'pierce',
+        basePower: 25,
+        manaCost: 20,
+        description: 'Weaponizes painful memories against you.'
+      }
+    ],
+    resistances: {
+      slash: 'normal',
+      pierce: 'normal',
+      blunt: 'resistant'
+    },
+    phaseTransitions: [
+      {
+        phase: 1,
+        healthThreshold: 1.0,
+        name: 'Inner Conflict',
+        description: 'Your corrupted self emerges from the shadows.',
+        specialMechanics: ['Psychological attacks', 'Memory manipulation']
+      },
+      {
+        phase: 2,
+        healthThreshold: 0.4,
+        name: 'Desperate Corruption',
+        description: 'The corruption fights desperately to maintain control!',
+        newSkills: [
+          {
+            id: 'despair_overwhelming',
+            name: 'Overwhelming Despair',
+            elementType: 'dark',
+            damageType: 'slash',
+            basePower: 35,
+            manaCost: 30,
+            description: 'Drowns you in the despair you have felt.'
+          }
+        ],
+        resistanceChanges: {
+          slash: 'endured',
+          pierce: 'endured',
+          blunt: 'normal'
+        },
+        specialMechanics: ['Reality distortion', 'Emotional manipulation']
+      }
+    ],
+    position: [0, -3],
+    scale: 2.0,
+    sprite: 'corrupted_self',
+    isDefeated: false
+  },
+  god_killer_avatar: {
+    id: 'god_killer_avatar',
+    name: 'God Killer Avatar',
+    title: 'The True Enemy',
+    lore: 'The God Killer\'s true form manifests, no longer hiding behind your corruption. Its malevolent presence shakes reality itself.',
+    maxHealth: 250,
+    currentHealth: 250,
+    phase: 1,
+    maxPhase: 3,
+    skills: [
+      {
+        id: 'reality_tear',
+        name: 'Reality Tear',
+        elementType: 'void',
+        damageType: 'slash',
+        basePower: 30,
+        manaCost: 25,
+        description: 'Tears holes in the fabric of existence.'
+      },
+      {
+        id: 'divine_corruption',
+        name: 'Divine Corruption',
+        elementType: 'dark',
+        damageType: 'pierce',
+        basePower: 35,
+        manaCost: 30,
+        description: 'Corrupts divine energy for destructive purposes.'
+      }
+    ],
+    resistances: {
+      slash: 'resistant',
+      pierce: 'resistant',
+      blunt: 'resistant'
+    },
+    phaseTransitions: [
+      {
+        phase: 1,
+        healthThreshold: 1.0,
+        name: 'Manifested Evil',
+        description: 'The God Killer reveals its true, horrifying form.',
+        specialMechanics: ['Reality manipulation', 'Corruption auras']
+      },
+      {
+        phase: 2,
+        healthThreshold: 0.6,
+        name: 'Cosmic Rage',
+        description: 'The God Killer unleashes cosmic-level destruction!',
+        newSkills: [
+          {
+            id: 'void_storm',
+            name: 'Void Storm',
+            elementType: 'void',
+            damageType: 'blunt',
+            basePower: 40,
+            manaCost: 35,
+            description: 'Summons a storm of nothingness.'
+          }
+        ],
+        resistanceChanges: {
+          slash: 'endured',
+          pierce: 'endured',
+          blunt: 'endured'
+        },
+        specialMechanics: ['Void attacks', 'Dimensional distortion']
+      },
+      {
+        phase: 3,
+        healthThreshold: 0.2,
+        name: 'Final Desperation',
+        description: 'The God Killer makes one last attempt to destroy everything!',
+        newSkills: [
+          {
+            id: 'apocalypse_incarnate',
+            name: 'Apocalypse Incarnate',
+            elementType: 'void',
+            damageType: 'pierce',
+            basePower: 60,
+            manaCost: 50,
+            description: 'The end of all things made manifest.'
+          }
+        ],
+        resistanceChanges: {
+          slash: 'fatal',
+          pierce: 'fatal',
+          blunt: 'fatal'
+        },
+        specialMechanics: ['Reality annihilation', 'Existence erasure']
+      }
+    ],
+    position: [0, -3],
+    scale: 3.0,
+    sprite: 'god_killer_avatar',
+    isDefeated: false
+  },
+  true_god_killer: {
+    id: 'true_god_killer',
+    name: 'The Primordial Void',
+    title: 'Ender of All Things',
+    lore: 'The original force of entropy and destruction. It existed before creation and seeks to return everything to the void.',
+    maxHealth: 350,
+    currentHealth: 350,
+    phase: 1,
+    maxPhase: 4,
+    skills: [
+      {
+        id: 'primordial_darkness',
+        name: 'Primordial Darkness',
+        elementType: 'void',
+        damageType: 'slash',
+        basePower: 45,
+        manaCost: 40,
+        description: 'The original darkness from before creation.'
+      }
+    ],
+    resistances: {
+      slash: 'fatal',
+      pierce: 'fatal',
+      blunt: 'fatal'
+    },
+    phaseTransitions: [
+      {
+        phase: 1,
+        healthThreshold: 1.0,
+        name: 'The Original Void',
+        description: 'You face the primordial force that existed before all creation.',
+        specialMechanics: ['Existence denial', 'Concept destruction']
+      },
+      {
+        phase: 2,
+        healthThreshold: 0.75,
+        name: 'Entropy Unleashed',
+        description: 'The God Killer begins unmaking reality itself!',
+        newSkills: [
+          {
+            id: 'concept_annihilation',
+            name: 'Concept Annihilation',
+            elementType: 'void',
+            damageType: 'blunt',
+            basePower: 55,
+            manaCost: 45,
+            description: 'Destroys the very concept of existence.'
+          }
+        ],
+        specialMechanics: ['Reality unmaking', 'Time dissolution']
+      },
+      {
+        phase: 3,
+        healthThreshold: 0.5,
+        name: 'Universal Dissolution',
+        description: 'The fabric of the universe begins to unravel!',
+        newSkills: [
+          {
+            id: 'reality_collapse',
+            name: 'Reality Collapse',
+            elementType: 'void',
+            damageType: 'pierce',
+            basePower: 70,
+            manaCost: 60,
+            description: 'Collapses entire dimensions into nothingness.'
+          }
+        ],
+        specialMechanics: ['Dimensional collapse', 'Universal entropy']
+      },
+      {
+        phase: 4,
+        healthThreshold: 0.1,
+        name: 'The Final End',
+        description: 'The God Killer makes its ultimate move to end all existence!',
+        newSkills: [
+          {
+            id: 'omega_terminus',
+            name: 'Omega Terminus',
+            elementType: 'void',
+            damageType: 'slash',
+            basePower: 100,
+            manaCost: 80,
+            description: 'The final attack to end everything that ever was or will be.'
+          }
+        ],
+        specialMechanics: ['Total annihilation', 'Existence termination']
+      }
+    ],
+    position: [0, -3],
+    scale: 4.0,
+    sprite: 'true_god_killer',
+    isDefeated: false
   }
 };
 

@@ -98,6 +98,54 @@ export const initialStoryActs: StoryAct[] = [
     bossId: 'final_boss',
     unlocked: false,
     completed: false
+  },
+  {
+    id: 'the_awakening',
+    title: 'The Awakening',
+    description: 'You realize the God Killer\'s control and fight back...',
+    dialogue: [
+      'In the depths of despair, something stirs within you.',
+      'A memory of who you once were, before the corruption.',
+      'The faces of those you swore to protect flash before your eyes.',
+      'You realize the God Killer has been feeding on your despair.',
+      'With tremendous effort, you begin to resist its influence.',
+      'For the first time in ages, you feel hope.'
+    ],
+    bossId: 'corrupted_self',
+    unlocked: false,
+    completed: false
+  },
+  {
+    id: 'divine_rebellion',
+    title: 'Divine Rebellion',
+    description: 'The surviving angels rally to help you break free...',
+    dialogue: [
+      'From the heavens, a chorus of voices calls out to you.',
+      'The surviving angels, witnessing your struggle, descend.',
+      '"We will not let evil triumph," they declare in unison.',
+      'Together, you and the celestial beings fight the God Killer.',
+      'Their pure light begins to cleanse the corruption within you.',
+      'But the God Killer will not surrender its vessel easily.'
+    ],
+    bossId: 'god_killer_avatar',
+    unlocked: false,
+    completed: false
+  },
+  {
+    id: 'final_redemption',
+    title: 'The Final Redemption',
+    description: 'Your ultimate choice determines the fate of all realms...',
+    dialogue: [
+      'You stand at the precipice between light and darkness.',
+      'The God Killer rages, its true form finally revealed.',
+      'All the pain, betrayal, and corruption weighs upon you.',
+      'But so does every life you ever saved, every prayer answered.',
+      'This is your moment of choice: revenge or redemption.',
+      'The fate of every realm hangs in the balance.'
+    ],
+    bossId: 'true_god_killer',
+    unlocked: false,
+    completed: false
   }
 ];
 

@@ -23,6 +23,8 @@ export function Character({ character }: CharacterProps) {
   const [criticalHit, setCriticalHit] = useState(false);
   const [elementalBurst, setElementalBurst] = useState('');
   const [attackSequence, setAttackSequence] = useState(0);
+  const [skySlashActive, setSkySlashActive] = useState(false);
+  const [screenFade, setScreenFade] = useState(0);
   const [animationFrame, setAnimationFrame] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isProcessing, combatPhase, lastBattleResult } = useCombat();
@@ -111,10 +113,13 @@ export function Character({ character }: CharacterProps) {
                 }, 200);
                 break;
               case 3:
-                // Third attack: Ultimate with all effects
+                // Third attack: EPIC ULTIMATE with sky sword!
                 if (weaponType === 'slash') {
+                  // Epic sky sword slash
+                  setSkySlashActive(true);
+                  setTimeout(() => setSkySlashActive(false), 2000);
                   setWeaponSlash(true);
-                  setTimeout(() => setWeaponSlash(false), 1000);
+                  setTimeout(() => setWeaponSlash(false), 1500);
                 } else if (weaponType === 'pierce') {
                   setSlashEffect(true);
                   setTimeout(() => setSlashEffect(false), 1000);
@@ -767,6 +772,56 @@ export function Character({ character }: CharacterProps) {
           }}
         />
       </div>
+      
+      {/* LOW HEALTH SCREEN FADE EFFECT */}
+      {healthPercentage <= 0.25 && (
+        <div className="fixed inset-0 pointer-events-none z-40">
+          <div 
+            className="absolute inset-0 bg-red-900 animate-pulse"
+            style={{
+              opacity: (0.25 - healthPercentage) * 2, // Fade gets stronger as health gets lower
+              mixBlendMode: 'multiply'
+            }}
+          />
+          <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-red-400 font-bold text-2xl animate-bounce">
+            💀 CRITICAL HEALTH! 💀
+          </div>
+        </div>
+      )}
+      
+      {/* EPIC SKY SWORD SLASH */}
+      {skySlashActive && (
+        <div className="absolute -inset-32 pointer-events-none z-50">
+          {/* Massive sword from sky */}
+          <div 
+            className="absolute w-4 bg-gradient-to-b from-yellow-200 via-blue-300 to-gray-600 animate-pulse"
+            style={{
+              height: '200px',
+              left: '50%',
+              top: '-150px',
+              transform: 'translateX(-50%) rotate(45deg)',
+              boxShadow: '0 0 20px rgba(255, 255, 255, 0.8)'
+            }}
+          />
+          {/* Sword handle */}
+          <div 
+            className="absolute w-6 h-8 bg-yellow-800 border-2 border-yellow-600"
+            style={{
+              left: '50%',
+              top: '-140px',
+              transform: 'translateX(-50%) rotate(45deg)',
+              borderRadius: '4px'
+            }}
+          />
+          {/* Epic flash effect */}
+          <div className="absolute inset-0 bg-white opacity-30 animate-ping" />
+          <div className="absolute inset-0 bg-yellow-300 opacity-20 animate-pulse" />
+          {/* Epic text */}
+          <div className="text-yellow-100 font-bold text-lg absolute -top-12 left-1/2 transform -translate-x-1/2 animate-bounce drop-shadow-lg">
+            ⚔️ DIVINE SWORD! ⚔️
+          </div>
+        </div>
+      )}
       
       {/* Attack effects - removed emoji display, using enhanced visual effects instead */}
       
