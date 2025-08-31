@@ -43,7 +43,7 @@ export function SkillSelector({ isVisible }: SkillSelectorProps) {
       case 'slash': return '⚔️';
       case 'pierce': return '🏹';
       case 'blunt': return '🔨';
-      default: return '❓';
+      default: return '⭐';
     }
   };
   

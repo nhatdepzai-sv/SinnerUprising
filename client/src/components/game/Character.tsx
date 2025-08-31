@@ -19,6 +19,9 @@ export function Character({ character }: CharacterProps) {
   const [weaponSlash, setWeaponSlash] = useState(false);
   const [bluntAttack, setBluntAttack] = useState(false);
   const [bloodEffect, setBloodEffect] = useState(false);
+  const [comboEffect, setComboEffect] = useState(false);
+  const [criticalHit, setCriticalHit] = useState(false);
+  const [elementalBurst, setElementalBurst] = useState('');
   const [animationFrame, setAnimationFrame] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isProcessing, combatPhase, lastBattleResult } = useCombat();
@@ -72,6 +75,8 @@ export function Character({ character }: CharacterProps) {
             setWeaponSlash(true);
             setTimeout(() => setWeaponSlash(false), 800);
             if (isHighDamage) {
+              setCriticalHit(true);
+              setTimeout(() => setCriticalHit(false), 1000);
               setTimeout(() => {
                 setBloodEffect(true);
                 setTimeout(() => setBloodEffect(false), 1200);
@@ -81,6 +86,8 @@ export function Character({ character }: CharacterProps) {
             setSlashEffect(true);
             setTimeout(() => setSlashEffect(false), 800);
             if (isHighDamage) {
+              setCriticalHit(true);
+              setTimeout(() => setCriticalHit(false), 1000);
               setTimeout(() => {
                 setBloodEffect(true);
                 setTimeout(() => setBloodEffect(false), 1200);
@@ -90,6 +97,8 @@ export function Character({ character }: CharacterProps) {
             setBluntAttack(true);
             setTimeout(() => setBluntAttack(false), 800);
             if (isHighDamage) {
+              setCriticalHit(true);
+              setTimeout(() => setCriticalHit(false), 1000);
               setTimeout(() => {
                 setBloodEffect(true);
                 setTimeout(() => setBloodEffect(false), 1200);
@@ -97,7 +106,17 @@ export function Character({ character }: CharacterProps) {
             }
           } else if (skill.elementType === 'light' || skill.elementType === 'dark') {
             setMagicBurst(true);
+            setElementalBurst(skill.elementType);
             setTimeout(() => setMagicBurst(false), 1000);
+            setTimeout(() => setElementalBurst(''), 1200);
+          }
+          
+          // Add combo effect for multiple hits
+          if (damage > normalDamage * 0.8) {
+            setTimeout(() => {
+              setComboEffect(true);
+              setTimeout(() => setComboEffect(false), 800);
+            }, 200);
           }
         }
       }, 800);
@@ -209,41 +228,63 @@ export function Character({ character }: CharacterProps) {
         />
       )}
       
-      {/* Weapon slash effect */}
+      {/* Enhanced Weapon slash effect */}
       {weaponSlash && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
-          {/* Main weapon arc */}
-          <div 
-            className="absolute w-16 h-16 border-4 border-yellow-400 rounded-full animate-ping"
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              clipPath: 'polygon(50% 50%, 100% 0%, 100% 50%)',
-              boxShadow: '0 0 15px rgba(255,215,0,0.8)',
-              background: 'linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.6) 50%, transparent 70%)'
-            }}
-          />
-          {/* Slash trails */}
-          <div 
-            className="absolute w-20 h-2 bg-gradient-to-r from-transparent via-yellow-300 to-transparent animate-ping"
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%) rotate(30deg)',
-              boxShadow: '0 0 10px rgba(255,255,0,0.9)'
-            }}
-          />
-          <div 
-            className="absolute w-18 h-1 bg-gradient-to-r from-transparent via-white to-transparent animate-ping"
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%) rotate(15deg)',
-              animationDelay: '0.1s',
-              boxShadow: '0 0 8px rgba(255,255,255,0.8)'
-            }}
-          />
+          {/* Main weapon arc with multiple slashes */}
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div 
+              key={i}
+              className="absolute w-20 h-20 border-4 border-yellow-400 rounded-full animate-ping"
+              style={{
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                clipPath: `polygon(50% 50%, ${100 - i * 10}% ${i * 10}%, ${100 - i * 10}% 50%)`,
+                boxShadow: '0 0 20px rgba(255,215,0,0.9)',
+                background: 'linear-gradient(45deg, transparent 20%, rgba(255,215,0,0.8) 50%, transparent 80%)',
+                animationDelay: `${i * 0.1}s`
+              }}
+            />
+          ))}
+          {/* Dynamic slash trails */}
+          {Array.from({ length: 5 }).map((_, i) => {
+            const angle = 15 + (i * 15);
+            const length = 20 + (i * 2);
+            return (
+              <div 
+                key={`trail-${i}`}
+                className="absolute h-2 bg-gradient-to-r from-transparent via-yellow-300 to-transparent animate-ping"
+                style={{
+                  width: `${length}px`,
+                  left: '50%',
+                  top: '50%',
+                  transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                  animationDelay: `${i * 0.05}s`,
+                  boxShadow: '0 0 12px rgba(255,255,0,0.9)'
+                }}
+              />
+            );
+          })}
+          {/* Sparkle effects */}
+          {Array.from({ length: 12 }).map((_, i) => {
+            const angle = (i / 12) * 360;
+            const distance = 15 + (i % 3) * 5;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            return (
+              <div
+                key={`sparkle-${i}`}
+                className="absolute w-1 h-1 bg-white rounded-full animate-ping"
+                style={{
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
+                  animationDelay: `${i * 0.03}s`,
+                  boxShadow: '0 0 4px rgba(255,255,255,0.9)'
+                }}
+              />
+            );
+          })}
         </div>
       )}
       
@@ -288,7 +329,7 @@ export function Character({ character }: CharacterProps) {
           >
             {/* Shield runes */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-blue-200 text-lg font-bold animate-pulse">⚡</div>
+              <div className="text-blue-200 text-lg font-bold animate-pulse">🛡️</div>
             </div>
           </div>
           {/* Shield sparkles */}
@@ -356,34 +397,62 @@ export function Character({ character }: CharacterProps) {
         </div>
       )}
       
-      {/* Blunt attack effect */}
+      {/* Enhanced Blunt attack effect */}
       {bluntAttack && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
-          {/* Impact shockwave */}
-          <div 
-            className="absolute w-16 h-16 border-4 border-orange-400 rounded-full animate-ping"
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              boxShadow: '0 0 20px rgba(251,146,60,0.8)',
-              background: 'radial-gradient(circle, rgba(251,146,60,0.4) 0%, transparent 70%)'
-            }}
-          />
-          {/* Impact cracks */}
-          {Array.from({ length: 6 }).map((_, i) => {
-            const angle = (i / 6) * 360;
+          {/* Multiple impact shockwaves */}
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div 
+              key={i}
+              className="absolute border-4 border-orange-400 rounded-full animate-ping"
+              style={{
+                width: `${16 + i * 8}px`,
+                height: `${16 + i * 8}px`,
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                boxShadow: '0 0 25px rgba(251,146,60,0.9)',
+                background: `radial-gradient(circle, rgba(251,146,60,${0.6 - i * 0.1}) 0%, transparent 70%)`,
+                animationDelay: `${i * 0.08}s`
+              }}
+            />
+          ))}
+          {/* Enhanced impact cracks */}
+          {Array.from({ length: 8 }).map((_, i) => {
+            const angle = (i / 8) * 360;
+            const length = 12 + (i % 2) * 6;
             return (
               <div
                 key={i}
-                className="absolute w-12 h-1 bg-gradient-to-r from-transparent via-orange-300 to-transparent animate-ping"
+                className="absolute h-2 bg-gradient-to-r from-transparent via-orange-300 to-transparent animate-ping"
                 style={{
+                  width: `${length}px`,
                   left: '50%',
                   top: '50%',
                   transformOrigin: '0% 50%',
                   transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                  animationDelay: `${i * 0.04}s`,
+                  boxShadow: '0 0 10px rgba(251,146,60,0.7)'
+                }}
+              />
+            );
+          })}
+          {/* Ground debris particles */}
+          {Array.from({ length: 10 }).map((_, i) => {
+            const angle = (i / 10) * 360;
+            const distance = 20 + (i % 3) * 5;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            return (
+              <div
+                key={`debris-${i}`}
+                className="absolute w-1 h-2 bg-orange-600 animate-bounce"
+                style={{
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
                   animationDelay: `${i * 0.05}s`,
-                  boxShadow: '0 0 8px rgba(251,146,60,0.6)'
+                  animationDuration: '0.8s',
+                  transform: `rotate(${angle}deg)`
                 }}
               />
             );
@@ -434,22 +503,144 @@ export function Character({ character }: CharacterProps) {
         </div>
       )}
       
-      {/* Magic burst effect */}
+      {/* Enhanced Magic burst effect */}
       {magicBurst && (
         <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 10 }}>
-          {Array.from({ length: 8 }).map((_, i) => {
-            const angle = (i / 8) * 360;
+          {/* Central magic core */}
+          <div 
+            className={`absolute w-6 h-6 rounded-full animate-pulse`}
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              background: elementalBurst === 'light' 
+                ? 'radial-gradient(circle, rgba(255,255,0,0.9) 0%, rgba(255,255,255,0.6) 100%)'
+                : 'radial-gradient(circle, rgba(147,51,234,0.9) 0%, rgba(75,0,130,0.6) 100%)',
+              boxShadow: elementalBurst === 'light' 
+                ? '0 0 25px rgba(255,255,0,0.8)'
+                : '0 0 25px rgba(147,51,234,0.8)'
+            }}
+          />
+          {/* Magic rays */}
+          {Array.from({ length: 12 }).map((_, i) => {
+            const angle = (i / 12) * 360;
             return (
               <div
                 key={i}
-                className="absolute w-2 h-8 bg-gradient-to-t from-purple-500 via-pink-400 to-transparent animate-ping"
+                className={`absolute w-2 h-12 animate-ping`}
                 style={{
                   left: '50%',
                   top: '50%',
                   transformOrigin: '50% 100%',
                   transform: `translate(-50%, -100%) rotate(${angle}deg)`,
-                  animationDelay: `${i * 0.1}s`,
-                  boxShadow: '0 0 6px rgba(147,51,234,0.8)'
+                  animationDelay: `${i * 0.08}s`,
+                  background: elementalBurst === 'light' 
+                    ? 'linear-gradient(to top, rgba(255,255,0,0.8), transparent)'
+                    : 'linear-gradient(to top, rgba(147,51,234,0.8), transparent)',
+                  boxShadow: elementalBurst === 'light' 
+                    ? '0 0 8px rgba(255,255,0,0.8)'
+                    : '0 0 8px rgba(147,51,234,0.8)'
+                }}
+              />
+            );
+          })}
+          {/* Floating particles */}
+          {Array.from({ length: 16 }).map((_, i) => {
+            const angle = (i / 16) * 360;
+            const distance = 20 + (i % 3) * 8;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            return (
+              <div
+                key={`particle-${i}`}
+                className="absolute w-1 h-1 rounded-full animate-bounce"
+                style={{
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
+                  animationDelay: `${i * 0.05}s`,
+                  animationDuration: '1.2s',
+                  background: elementalBurst === 'light' ? '#FFD700' : '#9333EA',
+                  boxShadow: elementalBurst === 'light' 
+                    ? '0 0 4px rgba(255,215,0,0.8)'
+                    : '0 0 4px rgba(147,51,234,0.8)'
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+      
+      {/* Critical Hit Effect */}
+      {criticalHit && (
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 15 }}>
+          {/* Critical flash */}
+          <div 
+            className="absolute w-20 h-20 rounded-full animate-ping"
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              background: 'radial-gradient(circle, rgba(255,0,0,0.8) 0%, rgba(255,255,0,0.4) 50%, transparent 100%)',
+              boxShadow: '0 0 30px rgba(255,0,0,0.9)'
+            }}
+          />
+          {/* Critical sparks */}
+          {Array.from({ length: 8 }).map((_, i) => {
+            const angle = (i / 8) * 360;
+            const distance = 25;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            return (
+              <div
+                key={i}
+                className="absolute w-3 h-1 bg-yellow-300 animate-ping"
+                style={{
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
+                  transform: `rotate(${angle}deg)`,
+                  animationDelay: `${i * 0.05}s`,
+                  boxShadow: '0 0 6px rgba(255,255,0,0.8)'
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+      
+      {/* Combo Effect */}
+      {comboEffect && (
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 11 }}>
+          {/* Combo rings */}
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute border-2 border-orange-400 rounded-full animate-ping"
+              style={{
+                width: `${(i + 1) * 20}px`,
+                height: `${(i + 1) * 20}px`,
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                animationDelay: `${i * 0.1}s`,
+                boxShadow: '0 0 10px rgba(251,146,60,0.6)'
+              }}
+            />
+          ))}
+          {/* Combo stars */}
+          {Array.from({ length: 6 }).map((_, i) => {
+            const angle = (i / 6) * 360;
+            const distance = 30;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            return (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-orange-300 rounded-full animate-bounce"
+                style={{
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
+                  animationDelay: `${i * 0.08}s`,
+                  boxShadow: '0 0 6px rgba(251,146,60,0.8)'
                 }}
               />
             );
