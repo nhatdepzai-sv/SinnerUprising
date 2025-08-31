@@ -62,7 +62,7 @@ export function Boss({ boss }: BossProps) {
     }
   }, [lastBattleResult, boss.id]);
   
-  // Get boss appearance based on phase and health
+  // Enhanced boss appearance based on phase and health
   const getBossColor = () => {
     const healthPercentage = boss.currentHealth / boss.maxHealth;
     
@@ -70,13 +70,31 @@ export function Boss({ boss }: BossProps) {
       case 1:
         return healthPercentage > 0.5 ? 'from-purple-600 to-purple-800' : 'from-purple-500 to-purple-700';
       case 2:
-        return healthPercentage > 0.3 ? 'from-red-600 to-red-800' : 'from-red-500 to-red-700';
+        // Second phase: More aggressive appearance with fire elements
+        return healthPercentage > 0.3 ? 'from-red-600 via-orange-500 to-red-800' : 'from-red-500 via-yellow-400 to-red-700';
       case 3:
-        return 'from-red-900 to-black';
+        // Final phase: Dark and menacing
+        return 'from-red-900 via-black to-purple-900';
       default:
         return 'from-gray-600 to-gray-800';
     }
   };
+  
+  // Get boss size modifications based on phase
+  const getBossPhaseModifications = () => {
+    switch (boss.phase) {
+      case 1:
+        return { spikes: false, aura: false, extraSize: 0 };
+      case 2:
+        return { spikes: true, aura: true, extraSize: 0.2 };
+      case 3:
+        return { spikes: true, aura: true, extraSize: 0.5 };
+      default:
+        return { spikes: false, aura: false, extraSize: 0 };
+    }
+  };
+  
+  const phaseModifications = getBossPhaseModifications();
   
   // Scale based on phase
   const currentScale = boss.scale + (boss.phase - 1) * 0.3;

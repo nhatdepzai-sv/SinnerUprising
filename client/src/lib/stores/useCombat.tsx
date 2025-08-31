@@ -36,6 +36,7 @@ interface CombatState {
   increaseStrength: (amount: number) => void;
   upgradeStrength: () => void;
   spendOrbs: (amount: number) => boolean;
+  executeSkibidiAttack: () => void;
 }
 
 export const useCombat = create<CombatState>()(
@@ -283,6 +284,28 @@ export const useCombat = create<CombatState>()(
     removeOrb: (orbId: string) => {
       const { orbs } = get();
       set({ orbs: orbs.filter(o => o.id !== orbId) });
+    },
+    
+    // Cheat code: One-shot boss attack
+    executeSkibidiAttack: () => {
+      const { currentBoss } = get();
+      if (currentBoss && currentBoss.currentHealth > 1) {
+        const damage = currentBoss.currentHealth - 1;
+        const newBossHealth = 1; // Leave boss with 1 HP
+        
+        set({
+          currentBoss: {
+            ...currentBoss,
+            currentHealth: newBossHealth
+          }
+        });
+        
+        get().addLogEntry('🎮 SKIBIDI ATTACK ACTIVATED!');
+        get().addLogEntry(`💥 Deals ${damage} damage to ${currentBoss.name}!`);
+        get().addLogEntry('🔥 Boss is almost defeated!');
+        
+        console.log('🎮 CHEAT: Skibidi attack deals', damage, 'damage!');
+      }
     },
 
     increaseStrength: (amount: number) => {

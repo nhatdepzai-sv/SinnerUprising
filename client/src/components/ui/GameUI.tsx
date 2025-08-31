@@ -17,6 +17,7 @@ import { useStory } from '../../lib/stores/useStory';
 export function GameUI() {
   const [showWeaponShop, setShowWeaponShop] = useState(false);
   const [showSkillLearning, setShowSkillLearning] = useState(false);
+  const [cheatInput, setCheatInput] = useState('');
   const { 
     gamePhase, 
     combatPhase, 
@@ -26,11 +27,43 @@ export function GameUI() {
     startCombat, 
     resetCombat,
     isProcessing,
-    setGamePhase
+    setGamePhase,
+    executeSkibidiAttack
   } = useCombat();
   const { selectedTeam, resetCharacters } = useCharacters();
   const { toggleMute, isMuted } = useAudio();
   const { isInCutscene, showingDialogue, hasSeenIntro, getCurrentAct, completeAct, resetStory, markIntroSeen } = useStory();
+  
+  // Cheat code system
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only listen when not in cutscene
+      if (!isInCutscene && !showingDialogue) {
+        const key = event.key.toLowerCase();
+        const newInput = cheatInput + key;
+        
+        // Check for "skibidi" cheat code
+        if (newInput.includes('skibidi')) {
+          // Execute the cheat attack!
+          executeSkibidiAttack();
+          setCheatInput(''); // Reset input
+        } else if (newInput.length > 10) {
+          // Reset if input gets too long
+          setCheatInput('');
+        } else {
+          setCheatInput(newInput);
+        }
+        
+        // Clear input after a delay
+        setTimeout(() => {
+          setCheatInput(prev => prev.slice(1)); // Remove first character
+        }, 2000);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [cheatInput, isInCutscene, showingDialogue, currentBoss]);
   
   useEffect(() => {
     // Auto-start story mode

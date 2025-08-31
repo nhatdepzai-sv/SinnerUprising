@@ -22,6 +22,7 @@ export function Character({ character }: CharacterProps) {
   const [comboEffect, setComboEffect] = useState(false);
   const [criticalHit, setCriticalHit] = useState(false);
   const [elementalBurst, setElementalBurst] = useState('');
+  const [attackSequence, setAttackSequence] = useState(0);
   const [animationFrame, setAnimationFrame] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isProcessing, combatPhase, lastBattleResult } = useCombat();
@@ -65,58 +66,89 @@ export function Character({ character }: CharacterProps) {
             weaponType = equippedWeapon.skills[0].damageType;
           }
           
+          // Cycling attack animation sequence
+          const currentSequence = (attackSequence % 3) + 1;
+          setAttackSequence(prev => prev + 1);
+          
           if (hasHealEffect) {
             setHealEffect(true);
             setTimeout(() => setHealEffect(false), 1500);
           } else if (hasShieldEffect) {
             setShieldEffect(true);
             setTimeout(() => setShieldEffect(false), 1200);
-          } else if (weaponType === 'slash') {
-            setWeaponSlash(true);
-            setTimeout(() => setWeaponSlash(false), 800);
-            if (isHighDamage) {
-              setCriticalHit(true);
-              setTimeout(() => setCriticalHit(false), 1000);
-              setTimeout(() => {
-                setBloodEffect(true);
-                setTimeout(() => setBloodEffect(false), 1200);
-              }, 400);
+          } else {
+            // Cycling through different attack animations
+            switch (currentSequence) {
+              case 1:
+                // First attack: Quick strike
+                if (weaponType === 'slash') {
+                  setWeaponSlash(true);
+                  setTimeout(() => setWeaponSlash(false), 600);
+                } else if (weaponType === 'pierce') {
+                  setSlashEffect(true);
+                  setTimeout(() => setSlashEffect(false), 600);
+                } else if (weaponType === 'blunt') {
+                  setBluntAttack(true);
+                  setTimeout(() => setBluntAttack(false), 600);
+                }
+                break;
+              case 2:
+                // Second attack: Power strike with effects
+                if (weaponType === 'slash') {
+                  setWeaponSlash(true);
+                  setTimeout(() => setWeaponSlash(false), 800);
+                } else if (weaponType === 'pierce') {
+                  setSlashEffect(true);
+                  setTimeout(() => setSlashEffect(false), 800);
+                } else if (weaponType === 'blunt') {
+                  setBluntAttack(true);
+                  setTimeout(() => setBluntAttack(false), 800);
+                }
+                // Add combo effect
+                setTimeout(() => {
+                  setComboEffect(true);
+                  setTimeout(() => setComboEffect(false), 600);
+                }, 200);
+                break;
+              case 3:
+                // Third attack: Ultimate with all effects
+                if (weaponType === 'slash') {
+                  setWeaponSlash(true);
+                  setTimeout(() => setWeaponSlash(false), 1000);
+                } else if (weaponType === 'pierce') {
+                  setSlashEffect(true);
+                  setTimeout(() => setSlashEffect(false), 1000);
+                } else if (weaponType === 'blunt') {
+                  setBluntAttack(true);
+                  setTimeout(() => setBluntAttack(false), 1000);
+                }
+                // Critical hit effect
+                if (isHighDamage) {
+                  setCriticalHit(true);
+                  setTimeout(() => setCriticalHit(false), 1200);
+                }
+                // Blood effect for high damage
+                if (isHighDamage) {
+                  setTimeout(() => {
+                    setBloodEffect(true);
+                    setTimeout(() => setBloodEffect(false), 1500);
+                  }, 400);
+                }
+                // Combo effect
+                setTimeout(() => {
+                  setComboEffect(true);
+                  setTimeout(() => setComboEffect(false), 800);
+                }, 300);
+                break;
             }
-          } else if (weaponType === 'pierce') {
-            setSlashEffect(true);
-            setTimeout(() => setSlashEffect(false), 800);
-            if (isHighDamage) {
-              setCriticalHit(true);
-              setTimeout(() => setCriticalHit(false), 1000);
-              setTimeout(() => {
-                setBloodEffect(true);
-                setTimeout(() => setBloodEffect(false), 1200);
-              }, 400);
-            }
-          } else if (weaponType === 'blunt') {
-            setBluntAttack(true);
-            setTimeout(() => setBluntAttack(false), 800);
-            if (isHighDamage) {
-              setCriticalHit(true);
-              setTimeout(() => setCriticalHit(false), 1000);
-              setTimeout(() => {
-                setBloodEffect(true);
-                setTimeout(() => setBloodEffect(false), 1200);
-              }, 600);
-            }
-          } else if (skill.elementType === 'light' || skill.elementType === 'dark') {
+          }
+          
+          // Magic attacks always get elemental burst
+          if (skill.elementType === 'light' || skill.elementType === 'dark') {
             setMagicBurst(true);
             setElementalBurst(skill.elementType);
             setTimeout(() => setMagicBurst(false), 1000);
             setTimeout(() => setElementalBurst(''), 1200);
-          }
-          
-          // Add combo effect for multiple hits
-          if (damage > normalDamage * 0.8) {
-            setTimeout(() => {
-              setComboEffect(true);
-              setTimeout(() => setComboEffect(false), 800);
-            }, 200);
           }
         }
       }, 800);
