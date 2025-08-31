@@ -12,6 +12,8 @@ export function Boss({ boss }: BossProps) {
   const [attackEffect, setAttackEffect] = useState<string | null>(null);
   const [isGlowing, setIsGlowing] = useState(false);
   const [damageNumbers, setDamageNumbers] = useState<{value: number, id: number} | null>(null);
+  const [isCharging, setIsCharging] = useState(false);
+  const [darkAura, setDarkAura] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Simple animation using React state
@@ -27,22 +29,40 @@ export function Boss({ boss }: BossProps) {
   useEffect(() => {
     if (lastBattleResult) {
       if (lastBattleResult.winner === 'boss') {
-        // Boss wins - powerful attack animation
-        setAttackEffect('🌟💥⚡🔥');
-        setIsGlowing(true);
+        // Boss wins - enhanced attack animation based on boss type
+        const skill = lastBattleResult.bossSkill;
+        setIsCharging(true);
+        
+        setTimeout(() => {
+          setIsCharging(false);
+          
+          // Different effects based on boss and skill type
+          if (boss.id === 'god_of_storms' || skill.elementType === 'air') {
+            setAttackEffect('🌪️💨⚡🌟');
+          } else if (boss.id === 'god_of_death' || skill.elementType === 'dark') {
+            setDarkAura(true);
+            setAttackEffect('🌑⚰️💀🔥💥');
+            setTimeout(() => setDarkAura(false), 1500);
+          } else {
+            setAttackEffect('🔥💥⚔️🌟');
+          }
+          
+          setIsGlowing(true);
+        }, 600);
+        
         setTimeout(() => {
           setAttackEffect(null);
           setIsGlowing(false);
-        }, 2500);
+        }, 3000);
       } else {
-        // Boss takes damage
-        setAttackEffect('💢💥');
+        // Boss takes damage - enhanced damage animation
+        setAttackEffect('💢💥🔥💫');
         setDamageNumbers({value: lastBattleResult.damage, id: Date.now()});
-        setTimeout(() => setAttackEffect(null), 1200);
-        setTimeout(() => setDamageNumbers(null), 2000);
+        setTimeout(() => setAttackEffect(null), 1500);
+        setTimeout(() => setDamageNumbers(null), 2500);
       }
     }
-  }, [lastBattleResult]);
+  }, [lastBattleResult, boss.id]);
   
   // Get boss appearance based on phase and health
   const getBossColor = () => {
@@ -64,8 +84,9 @@ export function Boss({ boss }: BossProps) {
   const currentScale = boss.scale + (boss.phase - 1) * 0.3;
   const scaleFactor = Math.min(currentScale, 3.0); // Cap the scale
   
-  // Floating animation
-  const floatOffset = Math.sin(animationFrame * 0.1) * 4;
+  // Floating animation with charging effect
+  const floatOffset = Math.sin(animationFrame * 0.1) * 4 + (isCharging ? Math.sin(animationFrame * 0.4) * 2 : 0);
+  const chargePulse = isCharging ? Math.sin(animationFrame * 0.5) * 0.5 + 0.5 : 0;
   
   // Phase transition effects
   const getPhaseEffects = () => {
@@ -112,6 +133,52 @@ export function Boss({ boss }: BossProps) {
       >
         {/* Phase effect rings */}
         {getPhaseEffects()}
+        
+        {/* Charging aura effect */}
+        {isCharging && (
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle, rgba(255,0,0,${chargePulse * 0.6}) 0%, transparent 70%)`,
+              animation: 'pulse 0.3s ease-in-out infinite',
+              zIndex: 5,
+              transform: 'scale(1.5)'
+            }}
+          />
+        )}
+        
+        
+        
+        {/* Dark aura effect */}
+        {darkAura && (
+          <div className="absolute inset-0 pointer-events-none overflow-visible" style={{ zIndex: 12 }}>
+            <div 
+              className="absolute inset-0 bg-gradient-radial from-purple-900/60 via-black/40 to-transparent animate-pulse"
+              style={{
+                transform: 'scale(2)',
+                borderRadius: '50%',
+                animation: 'darkPulse 1.5s ease-in-out'
+              }}
+            />
+            {Array.from({ length: 6 }).map((_, i) => {
+              const angle = (i / 6) * 360;
+              return (
+                <div
+                  key={i}
+                  className="absolute w-2 h-16 bg-gradient-to-t from-purple-600 via-black to-transparent animate-pulse"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    transformOrigin: '50% 100%',
+                    transform: `translate(-50%, -100%) rotate(${angle}deg) scale(2)`,
+                    animationDelay: `${i * 0.1}s`,
+                    boxShadow: '0 0 10px rgba(147,51,234,0.8)'
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
         
         {/* Boss main body - 64-bit style */}
         <div 
@@ -250,6 +317,45 @@ export function Boss({ boss }: BossProps) {
           0% { transform: translateY(0) scale(1); opacity: 1; }
           50% { transform: translateY(-30px) scale(1.3); opacity: 1; }
           100% { transform: translateY(-60px) scale(0.9); opacity: 0; }
+        }
+        
+        @keyframes lightningStrike {
+          0% { 
+            height: 0px; 
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(255,255,0,0.9);
+          }
+          50% { 
+            height: 200px; 
+            opacity: 1;
+            box-shadow: 0 0 25px rgba(255,255,0,1);
+          }
+          100% { 
+            height: 200px; 
+            opacity: 0;
+            box-shadow: 0 0 5px rgba(255,255,0,0.3);
+          }
+        }
+        
+        @keyframes darkPulse {
+          0% { 
+            transform: scale(1); 
+            opacity: 0;
+          }
+          50% { 
+            transform: scale(2.5); 
+            opacity: 0.8;
+          }
+          100% { 
+            transform: scale(3); 
+            opacity: 0;
+          }
+        }
+        
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+          20%, 40%, 60%, 80% { transform: translateX(2px); }
         }
       `}</style>
     </div>

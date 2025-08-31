@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { Boss, CombatAction, BattleResult, CombatPhase, GamePhase, Character } from '../../types/game';
+import { Boss, CombatAction, BattleResult, CombatPhase, GamePhase, Character, Orb } from '../../types/game';
 import { bosses, checkPhaseTransition, applyPhaseTransition } from '../combat/bosses';
 import { resolveBattle } from '../combat/clashing';
 import { useCharacters } from './useCharacters';
@@ -14,6 +14,10 @@ interface CombatState {
   lastBattleResult: BattleResult | null;
   combatLog: string[];
   isProcessing: boolean;
+  orbs: Orb[];
+  playerStrength: number;
+  strengthUpgradeLevel: number;
+  collectedOrbs: number;
   
   // Actions
   startCombat: (bossId?: string) => void;
@@ -26,6 +30,12 @@ interface CombatState {
   clearLog: () => void;
   resetCombat: () => void;
   setGamePhase: (phase: GamePhase) => void;
+  spawnOrb: () => void;
+  clickOrb: (orbId: string) => void;
+  removeOrb: (orbId: string) => void;
+  increaseStrength: (amount: number) => void;
+  upgradeStrength: () => void;
+  spendOrbs: (amount: number) => boolean;
 }
 
 export const useCombat = create<CombatState>()(
@@ -38,6 +48,10 @@ export const useCombat = create<CombatState>()(
     lastBattleResult: null,
     combatLog: [],
     isProcessing: false,
+    orbs: [],
+    playerStrength: 0,
+    strengthUpgradeLevel: 1,
+    collectedOrbs: 0,
     
     startCombat: (bossId?: string) => {
       const boss = bossId ? bosses[bossId] : bosses['god_of_war'];
@@ -213,6 +227,84 @@ export const useCombat = create<CombatState>()(
     
     setGamePhase: (phase: GamePhase) => {
       set({ gamePhase: phase });
+    },
+
+    spawnOrb: () => {
+      const orbId = `orb_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const position: [number, number, number] = [
+        (Math.random() - 0.5) * 10, // x: -5 to 5
+        2 + Math.random() * 3,      // y: 2 to 5
+        (Math.random() - 0.5) * 10  // z: -5 to 5
+      ];
+      
+      const hitpoints = 3 + Math.floor(Math.random() * 3); // 3-5 clicks
+      const strengthBonus = 1 + Math.floor(Math.random() * 2); // 1-2 strength
+      const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd'];
+      const glowColor = colors[Math.floor(Math.random() * colors.length)];
+      
+      const newOrb: Orb = {
+        id: orbId,
+        position,
+        hitpoints,
+        maxHitpoints: hitpoints,
+        strengthBonus,
+        glowColor,
+        spawnTime: Date.now()
+      };
+      
+      const { orbs } = get();
+      set({ orbs: [...orbs, newOrb] });
+      get().addLogEntry(`✨ A glowing orb appears! Click it ${hitpoints} times for +${strengthBonus} strength!`);
+    },
+
+    clickOrb: (orbId: string) => {
+      const { orbs } = get();
+      const orb = orbs.find(o => o.id === orbId);
+      
+      if (!orb) return;
+      
+      const newHitpoints = orb.hitpoints - 1;
+      
+      if (newHitpoints <= 0) {
+        // Orb destroyed, give orbs to spend
+        const { collectedOrbs } = get();
+        set({ collectedOrbs: collectedOrbs + 1 });
+        get().removeOrb(orbId);
+        get().addLogEntry(`🔮 Orb collected! You now have ${collectedOrbs + 1} orbs to spend!`);
+      } else {
+        // Update orb hitpoints
+        const updatedOrbs = orbs.map(o => 
+          o.id === orbId ? { ...o, hitpoints: newHitpoints } : o
+        );
+        set({ orbs: updatedOrbs });
+      }
+    },
+
+    removeOrb: (orbId: string) => {
+      const { orbs } = get();
+      set({ orbs: orbs.filter(o => o.id !== orbId) });
+    },
+
+    increaseStrength: (amount: number) => {
+      const { playerStrength } = get();
+      set({ playerStrength: playerStrength + amount });
+    },
+
+    upgradeStrength: () => {
+      const { strengthUpgradeLevel } = get();
+      set({ 
+        strengthUpgradeLevel: strengthUpgradeLevel + 1,
+        playerStrength: Math.floor(strengthUpgradeLevel * 1.5) // Base strength increase per level
+      });
+    },
+
+    spendOrbs: (amount: number) => {
+      const { collectedOrbs } = get();
+      if (collectedOrbs >= amount) {
+        set({ collectedOrbs: collectedOrbs - amount });
+        return true;
+      }
+      return false;
     }
   }))
 );

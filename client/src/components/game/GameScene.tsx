@@ -1,11 +1,25 @@
 import { Character } from './Character';
 import { Boss } from './Boss';
+import { Orb } from './Orb';
 import { useCombat } from '../../lib/stores/useCombat';
 import { useCharacters } from '../../lib/stores/useCharacters';
+import { useEffect } from 'react';
 
 export function GameScene() {
-  const { currentBoss, gamePhase, combatPhase } = useCombat();
+  const { currentBoss, gamePhase, combatPhase, orbs, spawnOrb, turnNumber } = useCombat();
   const { selectedTeam } = useCharacters();
+  
+  // Spawn orbs randomly during combat
+  useEffect(() => {
+    if (gamePhase === 'combat' && combatPhase === 'planning') {
+      // 30% chance to spawn an orb each turn
+      if (Math.random() < 0.3) {
+        setTimeout(() => {
+          spawnOrb();
+        }, 1000 + Math.random() * 2000); // Random delay between 1-3 seconds
+      }
+    }
+  }, [gamePhase, combatPhase, turnNumber, spawnOrb]);
   
   if (gamePhase !== 'combat') {
     return null;
@@ -124,6 +138,11 @@ export function GameScene() {
       {currentBoss && (
         <Boss boss={currentBoss} />
       )}
+      
+      {/* Collectible orbs */}
+      {orbs.map((orb) => (
+        <Orb key={orb.id} orb={orb} />
+      ))}
       
       {/* Battle phase indicator - pixelated */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2">

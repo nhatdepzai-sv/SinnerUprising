@@ -18,6 +18,7 @@ interface CharacterState {
   learnSkill: (characterId: string, skillId: string) => void;
   equipWeapon: (characterId: string, weaponId: string) => void;
   unequipWeapon: (characterId: string) => void;
+  upgradeCharacterStrength: (characterId: string, amount: number) => void;
   resetCharacters: () => void;
 }
 
@@ -223,6 +224,20 @@ export const useCharacters = create<CharacterState>((set, get) => ({
     });
   },
   
+  upgradeCharacterStrength: (characterId: string, amount: number) => {
+    const { selectedTeam } = get();
+    set({
+      selectedTeam: selectedTeam.map(character => {
+        if (character.id !== characterId) return character;
+        
+        return {
+          ...character,
+          strengthBonus: (character.strengthBonus || 0) + amount
+        };
+      })
+    });
+  },
+
   resetCharacters: () => {
     set({
       selectedTeam: initialCharacters.slice(0, 1).map(char => ({
@@ -230,7 +245,8 @@ export const useCharacters = create<CharacterState>((set, get) => ({
         currentHealth: char.maxHealth,
         currentMana: char.maxMana,
         corruption: 0,
-        equippedWeapon: null
+        equippedWeapon: null,
+        strengthBonus: 0
       }))
     });
   }

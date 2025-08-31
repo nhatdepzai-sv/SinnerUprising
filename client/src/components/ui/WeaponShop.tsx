@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useWeaponShop } from '../../lib/stores/useWeaponShop';
 import { useCharacters } from '../../lib/stores/useCharacters';
+import { useCombat } from '../../lib/stores/useCombat';
 import { Button } from './button';
 import { Card, CardHeader, CardTitle, CardContent } from './card';
 import { Badge } from './badge';
@@ -13,7 +14,8 @@ interface WeaponShopProps {
 
 export function WeaponShop({ isVisible, onClose }: WeaponShopProps) {
   const { availableWeapons, inventory, playerGold, buyWeapon, sellWeapon } = useWeaponShop();
-  const { selectedTeam, equipWeapon, unequipWeapon } = useCharacters();
+  const { selectedTeam, equipWeapon, unequipWeapon, upgradeCharacterStrength } = useCharacters();
+  const { collectedOrbs, spendOrbs } = useCombat();
   const [selectedTab, setSelectedTab] = useState('shop');
 
   if (!isVisible) return null;
@@ -60,8 +62,9 @@ export function WeaponShop({ isVisible, onClose }: WeaponShopProps) {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className="text-2xl font-bold">⚔️ Weapon Shop</CardTitle>
-            <div className="flex items-center space-x-2 mt-2">
+            <div className="flex items-center space-x-4 mt-2">
               <span className="text-yellow-400 text-lg">💰 {playerGold} Gold</span>
+              <span className="text-blue-400 text-lg">🔮 {collectedOrbs} Orbs</span>
             </div>
           </div>
           <Button 
@@ -75,12 +78,15 @@ export function WeaponShop({ isVisible, onClose }: WeaponShopProps) {
         
         <CardContent>
           <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-            <TabsList className="grid w-full grid-cols-2 bg-gray-800">
+            <TabsList className="grid w-full grid-cols-3 bg-gray-800">
               <TabsTrigger value="shop" className="text-white data-[state=active]:bg-gray-700">
                 🛒 Shop
               </TabsTrigger>
               <TabsTrigger value="inventory" className="text-white data-[state=active]:bg-gray-700">
                 🎒 Inventory ({inventory.length})
+              </TabsTrigger>
+              <TabsTrigger value="upgrades" className="text-white data-[state=active]:bg-gray-700">
+                ⚡ Upgrades
               </TabsTrigger>
             </TabsList>
             
@@ -194,6 +200,87 @@ export function WeaponShop({ isVisible, onClose }: WeaponShopProps) {
                   ))}
                 </div>
               )}
+            </TabsContent>
+            
+            <TabsContent value="upgrades" className="mt-4">
+              <div className="space-y-4">
+                <div className="bg-gray-800 border border-blue-600 rounded-lg p-4">
+                  <h3 className="text-xl font-bold text-blue-300 mb-2">⚡ Strength Upgrades</h3>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Use collected orbs to permanently increase your characters' strength!
+                  </p>
+                  
+                  {selectedTeam.length === 0 ? (
+                    <div className="text-center text-gray-400 py-4">
+                      No characters available for upgrade.
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {selectedTeam.map((character) => (
+                        <div key={character.id} className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                          <div className="flex justify-between items-center mb-3">
+                            <div>
+                              <h4 className="text-lg font-semibold text-white">{character.name}</h4>
+                              <p className="text-sm text-gray-400">{character.title}</p>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-red-400 font-bold">
+                                Current Strength: +{character.strengthBonus || 0}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="bg-gray-800 rounded p-3 border border-gray-600">
+                              <h5 className="text-sm font-semibold text-green-400 mb-2">Small Upgrade (+1 Strength)</h5>
+                              <p className="text-xs text-gray-400 mb-2">Cost: 2 Orbs</p>
+                              <Button
+                                onClick={() => {
+                                  if (spendOrbs(2)) {
+                                    upgradeCharacterStrength(character.id, 1);
+                                  }
+                                }}
+                                disabled={collectedOrbs < 2}
+                                size="sm"
+                                className="w-full bg-green-700 hover:bg-green-600 disabled:bg-gray-600"
+                              >
+                                {collectedOrbs >= 2 ? 'Upgrade' : 'Need 2 Orbs'}
+                              </Button>
+                            </div>
+                            
+                            <div className="bg-gray-800 rounded p-3 border border-gray-600">
+                              <h5 className="text-sm font-semibold text-blue-400 mb-2">Medium Upgrade (+2 Strength)</h5>
+                              <p className="text-xs text-gray-400 mb-2">Cost: 3 Orbs</p>
+                              <Button
+                                onClick={() => {
+                                  if (spendOrbs(3)) {
+                                    upgradeCharacterStrength(character.id, 2);
+                                  }
+                                }}
+                                disabled={collectedOrbs < 3}
+                                size="sm"
+                                className="w-full bg-blue-700 hover:bg-blue-600 disabled:bg-gray-600"
+                              >
+                                {collectedOrbs >= 3 ? 'Upgrade' : 'Need 3 Orbs'}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="bg-gray-800/50 border border-gray-600 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-yellow-400 mb-2">💡 How to Get Orbs</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
+                    <li>• Orbs spawn randomly during combat battles</li>
+                    <li>• Click on orbs quickly before they disappear</li>
+                    <li>• Each orb collected gives you 1 orb to spend here</li>
+                    <li>• Strength upgrades are permanent and carry between battles</li>
+                  </ul>
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>

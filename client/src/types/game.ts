@@ -52,6 +52,7 @@ export interface Character {
   sprite: string;
   position: [number, number];
   equippedWeapon?: Weapon | null;
+  strengthBonus?: number;
 }
 
 export interface Boss {
@@ -112,6 +113,16 @@ export interface StoryAct {
   completed: boolean;
 }
 
+export interface Orb {
+  id: string;
+  position: [number, number, number];
+  hitpoints: number;
+  maxHitpoints: number;
+  strengthBonus: number;
+  glowColor: string;
+  spawnTime: number;
+}
+
 export interface GameState {
   currentAct: number;
   acts: StoryAct[];
@@ -119,4 +130,6 @@ export interface GameState {
   defeatedGods: string[];
   corruptionLevel: number;
   hasReachedFinalBoss: boolean;
+  playerStrength: number;
+  strengthUpgradeLevel: number;
 }
