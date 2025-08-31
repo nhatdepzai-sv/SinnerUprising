@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Character as CharacterType } from '../../types/game';
 import { useCombat } from '../../lib/stores/useCombat';
 
@@ -8,6 +8,10 @@ interface CharacterProps {
 
 export function Character({ character }: CharacterProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [attackEffect, setAttackEffect] = useState<string | null>(null);
+  const [isShaking, setIsShaking] = useState(false);
+  const [damageNumbers, setDamageNumbers] = useState<{value: number, id: number} | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { isProcessing, combatPhase, lastBattleResult } = useCombat();
   
   // Trigger animation when character takes action or during combat
@@ -17,7 +21,32 @@ export function Character({ character }: CharacterProps) {
       const timer = setTimeout(() => setIsAnimating(false), 1500);
       return () => clearTimeout(timer);
     }
-  }, [isProcessing, combatPhase, lastBattleResult]);
+  }, [isProcessing, combatPhase]);
+  
+  // Listen for battle results and trigger appropriate animations
+  useEffect(() => {
+    if (lastBattleResult) {
+      if (lastBattleResult.winner === 'character') {
+        // Character wins - success animation
+        setAttackEffect('✨⚡💫');
+        setIsAnimating(true);
+        setTimeout(() => {
+          setAttackEffect(null);
+          setIsAnimating(false);
+        }, 2000);
+      } else {
+        // Character loses - damage animation
+        setAttackEffect('💥🔥💢');
+        setIsShaking(true);
+        setDamageNumbers({value: lastBattleResult.damage, id: Date.now()});
+        
+        // Shake animation
+        setTimeout(() => setIsShaking(false), 600);
+        setTimeout(() => setAttackEffect(null), 1500);
+        setTimeout(() => setDamageNumbers(null), 2000);
+      }
+    }
+  }, [lastBattleResult]);
   
   // Get character color based on element affinity
   const getCharacterColor = () => {
@@ -35,9 +64,15 @@ export function Character({ character }: CharacterProps) {
   
   return (
     <div 
-      className="relative"
+      ref={containerRef}
+      className={`relative transition-transform duration-200 ${
+        isShaking ? 'animate-bounce' : ''
+      }`}
       style={{
-        transform: `translate(${character.position[0]}px, ${character.position[1]}px)`
+        transform: `translate(${character.position[0]}px, ${character.position[1]}px) ${
+          isShaking ? 'scale(1.1)' : 'scale(1)'
+        }`,
+        animation: isShaking ? 'shake 0.6s ease-in-out' : 'none'
       }}
     >
       {/* Character sprite - 64-bit style */}
@@ -139,12 +174,61 @@ export function Character({ character }: CharacterProps) {
         />
       </div>
       
+      {/* Attack effects */}
+      {attackEffect && (
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="text-2xl animate-bounce">
+            {attackEffect.split('').map((emoji, i) => (
+              <span 
+                key={i}
+                className="inline-block animate-pulse"
+                style={{
+                  animationDelay: `${i * 100}ms`,
+                  animationDuration: '0.8s'
+                }}
+              >
+                {emoji}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Damage numbers */}
+      {damageNumbers && (
+        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-30">
+          <div 
+            className="text-red-400 font-bold text-lg animate-bounce"
+            style={{
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+              animation: 'damageFloat 2s ease-out forwards'
+            }}
+          >
+            -{damageNumbers.value}
+          </div>
+        </div>
+      )}
+      
       {/* Action indicator */}
-      {isAnimating && (
+      {isAnimating && !attackEffect && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
           <div className="text-yellow-400 text-xs animate-ping">⚔️</div>
         </div>
       )}
+      {/* Add custom CSS animations via style attribute */}
+      <style>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-4px) rotate(-2deg); }
+          75% { transform: translateX(4px) rotate(2deg); }
+        }
+        
+        @keyframes damageFloat {
+          0% { transform: translateY(0) scale(1); opacity: 1; }
+          50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+          100% { transform: translateY(-40px) scale(0.8); opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 }

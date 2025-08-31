@@ -113,7 +113,20 @@ export const useCombat = create<CombatState>()(
         }
         
         // Update character health if they took damage
-        // Note: Character health update will be handled by the UI layer for now
+        if (characterHealthChange < 0) {
+          const newCharacterHealth = character.currentHealth + characterHealthChange;
+          useCharacters.getState().updateCharacterHealth(character.id, newCharacterHealth);
+          
+          // Check if character is defeated
+          if (newCharacterHealth <= 0) {
+            get().addLogEntry(`${character.name} has been defeated!`);
+            set({
+              gamePhase: 'defeat',
+              isProcessing: false
+            });
+            return;
+          }
+        }
         
         const updatedBoss = { ...boss, currentHealth: newBossHealth };
         
@@ -129,13 +142,18 @@ export const useCombat = create<CombatState>()(
         
         // Check for victory/defeat
         if (finalBoss.currentHealth <= 0) {
+          // Grant experience for victory
+          const expGained = 50 + (boss.phase * 25);
+          useCharacters.getState().gainExperience(character.id, expGained);
+          get().addLogEntry(`Victory! ${boss.name} has been defeated!`);
+          get().addLogEntry(`${character.name} gained ${expGained} experience!`);
+          
           set({
             currentBoss: finalBoss,
             lastBattleResult: battleResult,
             gamePhase: 'victory',
             isProcessing: false
           });
-          get().addLogEntry(`Victory! ${boss.name} has been defeated!`);
           return;
         }
         

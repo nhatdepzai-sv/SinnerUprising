@@ -11,10 +11,12 @@ import { ActSelection } from './ActSelection';
 import { IntroAnimation } from './IntroAnimation';
 import { MapSystem } from './MapSystem';
 import { WeaponShop } from './WeaponShop';
+import { SkillLearning } from './SkillLearning';
 import { useStory } from '../../lib/stores/useStory';
 
 export function GameUI() {
   const [showWeaponShop, setShowWeaponShop] = useState(false);
+  const [showSkillLearning, setShowSkillLearning] = useState(false);
   const { 
     gamePhase, 
     combatPhase, 
@@ -227,6 +229,12 @@ export function GameUI() {
         >
           ⚔️ Weapon Shop
         </button>
+        <button
+          onClick={() => setShowSkillLearning(true)}
+          className="block w-full px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+        >
+          ✨ Learn Skills
+        </button>
         
         <button
           onClick={toggleMute}
@@ -256,6 +264,10 @@ export function GameUI() {
       <WeaponShop 
         isVisible={showWeaponShop} 
         onClose={() => setShowWeaponShop(false)} 
+      />
+      <SkillLearning
+        isOpen={showSkillLearning}
+        onClose={() => setShowSkillLearning(false)}
       />
     </>
   );

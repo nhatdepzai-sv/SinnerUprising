@@ -42,8 +42,11 @@ export interface Character {
   maxMana: number;
   currentMana: number;
   level: number;
+  experience: number;
+  experienceToNext: number;
   corruption: number;
   skills: Skill[];
+  availableSkills: Skill[];
   resistances: Record<DamageType, ResistanceLevel>;
   elementAffinities: ElementType[];
   sprite: string;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Boss as BossType } from '../../types/game';
 import { useCombat } from '../../lib/stores/useCombat';
 
@@ -7,8 +7,12 @@ interface BossProps {
 }
 
 export function Boss({ boss }: BossProps) {
-  const { gamePhase } = useCombat();
+  const { gamePhase, lastBattleResult, isProcessing } = useCombat();
   const [animationFrame, setAnimationFrame] = useState(0);
+  const [attackEffect, setAttackEffect] = useState<string | null>(null);
+  const [isGlowing, setIsGlowing] = useState(false);
+  const [damageNumbers, setDamageNumbers] = useState<{value: number, id: number} | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Simple animation using React state
   useEffect(() => {
@@ -18,6 +22,27 @@ export function Boss({ boss }: BossProps) {
     
     return () => clearInterval(interval);
   }, []);
+  
+  // Listen for battle results and trigger appropriate animations
+  useEffect(() => {
+    if (lastBattleResult) {
+      if (lastBattleResult.winner === 'boss') {
+        // Boss wins - powerful attack animation
+        setAttackEffect('🌟💥⚡🔥');
+        setIsGlowing(true);
+        setTimeout(() => {
+          setAttackEffect(null);
+          setIsGlowing(false);
+        }, 2500);
+      } else {
+        // Boss takes damage
+        setAttackEffect('💢💥');
+        setDamageNumbers({value: lastBattleResult.damage, id: Date.now()});
+        setTimeout(() => setAttackEffect(null), 1200);
+        setTimeout(() => setDamageNumbers(null), 2000);
+      }
+    }
+  }, [lastBattleResult]);
   
   // Get boss appearance based on phase and health
   const getBossColor = () => {
@@ -65,12 +90,16 @@ export function Boss({ boss }: BossProps) {
   
   return (
     <div 
-      className="absolute flex flex-col items-center"
+      ref={containerRef}
+      className={`absolute flex flex-col items-center transition-all duration-300 ${
+        isGlowing ? 'drop-shadow-2xl' : ''
+      }`}
       style={{
         left: '50%',
         top: '30%',
         transform: `translate(-50%, -50%) scale(${scaleFactor})`,
-        transition: 'transform 0.3s ease-in-out'
+        transition: 'transform 0.3s ease-in-out',
+        filter: isGlowing ? 'brightness(1.3) saturate(1.5) drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none'
       }}
     >
       {/* Boss sprite container */}
@@ -170,14 +199,59 @@ export function Boss({ boss }: BossProps) {
         </div>
       </div>
       
+      {/* Boss attack effects */}
+      {attackEffect && (
+        <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="text-4xl animate-pulse">
+            {attackEffect.split('').map((emoji, i) => (
+              <span 
+                key={i}
+                className="inline-block animate-bounce"
+                style={{
+                  animationDelay: `${i * 150}ms`,
+                  animationDuration: '1.2s',
+                  filter: 'drop-shadow(0 0 10px rgba(255, 255, 0, 0.8))'
+                }}
+              >
+                {emoji}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Boss damage numbers */}
+      {damageNumbers && (
+        <div className="absolute -top-24 left-1/2 transform -translate-x-1/2 z-30">
+          <div 
+            className="text-orange-400 font-bold text-2xl animate-bounce"
+            style={{
+              textShadow: '3px 3px 6px rgba(0,0,0,0.9)',
+              animation: 'bossDamageFloat 2s ease-out forwards'
+            }}
+          >
+            -{damageNumbers.value}
+          </div>
+        </div>
+      )}
+      
       {/* Combat state indicators */}
-      {gamePhase === 'combat' && (
+      {gamePhase === 'combat' && !attackEffect && (
         <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
           <div className="text-yellow-400 text-sm animate-pulse">
             ⚔️ In Combat
           </div>
         </div>
       )}
+      
+      {/* Add custom CSS for boss animations */}
+      <style>{`
+        @keyframes bossDamageFloat {
+          0% { transform: translateY(0) scale(1); opacity: 1; }
+          50% { transform: translateY(-30px) scale(1.3); opacity: 1; }
+          100% { transform: translateY(-60px) scale(0.9); opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 }
