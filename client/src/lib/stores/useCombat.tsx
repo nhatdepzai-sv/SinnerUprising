@@ -18,6 +18,7 @@ interface CombatState {
   playerStrength: number;
   strengthUpgradeLevel: number;
   collectedOrbs: number;
+  skibidiArmyActive: boolean;
   
   // Actions
   startCombat: (bossId?: string) => void;
@@ -53,6 +54,7 @@ export const useCombat = create<CombatState>()(
     playerStrength: 0,
     strengthUpgradeLevel: 1,
     collectedOrbs: 0,
+    skibidiArmyActive: false,
     
     startCombat: (bossId?: string) => {
       const boss = bossId ? bosses[bossId] : bosses['god_of_war'];
@@ -286,7 +288,7 @@ export const useCombat = create<CombatState>()(
       set({ orbs: orbs.filter(o => o.id !== orbId) });
     },
     
-    // Cheat code: One-shot boss attack
+    // Cheat code: One-shot boss attack with skibidi army!
     executeSkibidiAttack: () => {
       const { currentBoss } = get();
       if (currentBoss && currentBoss.currentHealth > 1) {
@@ -300,11 +302,19 @@ export const useCombat = create<CombatState>()(
           }
         });
         
-        get().addLogEntry('🎮 SKIBIDI ATTACK ACTIVATED!');
-        get().addLogEntry(`💥 Deals ${damage} damage to ${currentBoss.name}!`);
+        get().addLogEntry('🎮 SKIBIDI ARMY SUMMONED!');
+        get().addLogEntry('💥 A thousand skibidis attack the boss!');
+        get().addLogEntry(`💥 Deals ${damage} EPIC damage to ${currentBoss.name}!`);
         get().addLogEntry('🔥 Boss is almost defeated!');
+        get().addLogEntry('🎉 SKIBIDI POWER ACTIVATED!');
         
         console.log('🎮 CHEAT: Skibidi attack deals', damage, 'damage!');
+        
+        // Trigger skibidi army visual effect
+        set({ skibidiArmyActive: true });
+        setTimeout(() => {
+          set({ skibidiArmyActive: false });
+        }, 3000);
       }
     },
 

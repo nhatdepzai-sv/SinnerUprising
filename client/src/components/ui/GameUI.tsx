@@ -28,7 +28,9 @@ export function GameUI() {
     resetCombat,
     isProcessing,
     setGamePhase,
-    executeSkibidiAttack
+    executeSkibidiAttack,
+    increaseStrength,
+    skibidiArmyActive
   } = useCombat();
   const { selectedTeam, resetCharacters } = useCharacters();
   const { toggleMute, isMuted } = useAudio();
@@ -178,6 +180,8 @@ export function GameUI() {
                 if (currentAct) {
                   completeAct(currentAct.id);
                 }
+                // Go to story selection to choose next chapter
+                setGamePhase('story');
                 resetCombat();
               }}
               className="px-8 py-4 bg-red-600 hover:bg-red-700 text-xl font-semibold transition-colors border-4 border-red-800"
@@ -215,12 +219,24 @@ export function GameUI() {
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-4xl font-bold text-red-400 mb-4">Defeat</h1>
-          <p className="text-xl mb-8">Your team has been defeated...</p>
+          <p className="text-xl mb-4">Your team has been defeated...</p>
+          <p className="text-lg mb-8 text-yellow-400">💰 You gained 100 gold for your effort!</p>
           <button
-            onClick={handleRestartGame}
-            className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg text-xl font-semibold transition-colors"
+            onClick={() => {
+              // Award money for losing
+              increaseStrength(100); // Using strength as money
+              handleRestartGame();
+            }}
+            className="px-8 py-4 bg-red-600 hover:bg-red-700 text-xl font-semibold transition-colors border-4 border-red-800"
+            style={{
+              imageRendering: 'pixelated',
+              filter: 'contrast(1.2)',
+              borderRadius: '0px',
+              fontFamily: 'monospace',
+              textShadow: '2px 2px 0px #000000'
+            }}
           >
-            Try Again
+            Try Again (+100 Gold)
           </button>
         </div>
       </div>
@@ -229,6 +245,51 @@ export function GameUI() {
   
   return (
     <>
+      {/* EPIC SKIBIDI ARMY EFFECT */}
+      {skibidiArmyActive && (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          {/* Army of skibidis attacking from all directions */}
+          {Array.from({ length: 20 }).map((_, i) => {
+            const angle = (i / 20) * 360;
+            const distance = 200 + (i % 3) * 100;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            const delay = i * 0.1;
+            return (
+              <div
+                key={i}
+                className="absolute w-8 h-8 bg-blue-600 rounded-lg animate-bounce text-center leading-8 font-bold text-white text-xs"
+                style={{
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
+                  animation: `skibidiAttack 3s ease-in-out ${delay}s`,
+                  boxShadow: '0 0 10px rgba(59, 130, 246, 0.8)',
+                  transform: `rotate(${angle}deg)`
+                }}
+              >
+                S
+              </div>
+            );
+          })}
+          {/* Central explosion effect */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="w-32 h-32 bg-yellow-400 opacity-60 rounded-full animate-ping" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold text-red-600 animate-bounce">
+              💥
+            </div>
+          </div>
+          {/* Epic text */}
+          <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-center">
+            <div className="text-6xl font-bold text-blue-400 animate-pulse drop-shadow-lg">
+              🔥 SKIBIDI ARMY! 🔥
+            </div>
+            <div className="text-2xl font-bold text-yellow-400 animate-bounce mt-2">
+              ULTIMATE ATTACK!
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Boss health bar */}
       {currentBoss && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10">
