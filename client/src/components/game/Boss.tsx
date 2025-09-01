@@ -322,24 +322,24 @@ export function Boss({ boss }: BossProps) {
           </div>
         ) : (boss.id === 'god_of_war' || boss.name === 'Ares') ? (
           /* God of War - Spartan Warrior */
-          <div className="relative w-56 h-80" style={{ imageRendering: 'pixelated' }}>
+          <div className="relative w-64 h-80" style={{ imageRendering: 'pixelated' }}>
             
             {/* Spartan Warrior Character */}
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-40 h-72">
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-48 h-72">
               
               {/* Head & Spartan Helmet */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-18 h-22">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-24">
                 {/* Face */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-b from-orange-200 to-orange-300 border-2 border-red-600">
-                  <div className="absolute top-2 left-2 w-2 h-2 bg-red-600" />
-                  <div className="absolute top-2 right-2 w-2 h-2 bg-red-600" />
+                  <div className="absolute top-2 left-2 w-2 h-2 bg-red-600 rounded-full" />
+                  <div className="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full" />
                   <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-orange-400" />
                   <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-red-700" />
                 </div>
                 {/* Spartan Helmet with Crest */}
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-18 h-18 bg-gradient-to-b from-red-600 to-red-800 border-2 border-yellow-400">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-16 bg-gradient-to-b from-red-600 to-red-800 border-2 border-yellow-400">
                   {/* Crest/Plume */}
-                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-20 h-10 bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-400 border border-yellow-300" style={{ clipPath: 'polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%)' }} />
+                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-24 h-8 bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-400 border border-yellow-300" style={{ clipPath: 'polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%)' }} />
                   {/* Helmet details */}
                   <div className="absolute top-2 left-1 right-1 h-1 bg-yellow-400" />
                   <div className="absolute top-4 left-2 right-2 h-1 bg-yellow-400" />
@@ -350,11 +350,11 @@ export function Boss({ boss }: BossProps) {
               </div>
               
               {/* Muscular Torso & Bronze Armor */}
-              <div className="absolute top-22 left-1/2 transform -translate-x-1/2 w-22 h-26">
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-24 h-28">
                 {/* Muscle cuirass */}
-                <div className="absolute inset-0 bg-gradient-to-b from-red-700 to-red-900 border-2 border-yellow-400">
+                <div className="absolute inset-0 bg-gradient-to-b from-red-700 to-red-900 border-2 border-yellow-400 rounded">
                   {/* Muscle definition */}
-                  <div className="absolute top-2 left-2 right-2 h-6 border border-yellow-300 opacity-60" />
+                  <div className="absolute top-2 left-2 right-2 h-6 border border-yellow-300 opacity-60 rounded" />
                   <div className="absolute top-4 left-4 right-4 h-1 bg-yellow-400" />
                   <div className="absolute top-8 left-3 right-3 h-1 bg-yellow-400" />
                   {/* Spartan Lambda symbol */}
@@ -364,36 +364,36 @@ export function Boss({ boss }: BossProps) {
                   </div>
                 </div>
                 {/* Shoulder guards */}
-                <div className="absolute top-0 -left-6 w-10 h-14 bg-red-800 border-2 border-yellow-400 transform -rotate-15" />
-                <div className="absolute top-0 -right-6 w-10 h-14 bg-red-800 border-2 border-yellow-400 transform rotate-15" />
+                <div className="absolute top-0 -left-6 w-10 h-12 bg-red-800 border-2 border-yellow-400 transform -rotate-12 rounded" />
+                <div className="absolute top-0 -right-6 w-10 h-12 bg-red-800 border-2 border-yellow-400 transform rotate-12 rounded" />
               </div>
               
               {/* Muscular Arms */}
-              <div className="absolute top-26 -left-10 w-8 h-22">
-                <div className="w-full h-14 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600" />
-                <div className="w-10 h-8 bg-red-800 border-2 border-yellow-400 transform -translate-x-1" />
+              <div className="absolute top-24 -left-12 w-8 h-20">
+                <div className="w-full h-12 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600 rounded" />
+                <div className="w-10 h-8 bg-red-800 border-2 border-yellow-400 rounded transform -translate-x-1" />
               </div>
-              <div className="absolute top-26 -right-10 w-8 h-22">
-                <div className="w-full h-14 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600" />
-                <div className="w-10 h-8 bg-red-800 border-2 border-yellow-400 transform translate-x-1" />
+              <div className="absolute top-24 -right-12 w-8 h-20">
+                <div className="w-full h-12 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600 rounded" />
+                <div className="w-10 h-8 bg-red-800 border-2 border-yellow-400 rounded transform translate-x-1" />
               </div>
               
               {/* Spartan Spear */}
               <div 
-                className="absolute top-6 -left-18 w-3 h-44 bg-gradient-to-b from-yellow-600 via-yellow-800 to-red-700 border border-yellow-500 transform -rotate-20"
+                className="absolute top-6 left-4 w-2 h-40 bg-gradient-to-b from-yellow-600 via-yellow-800 to-red-700 border border-yellow-500 transform -rotate-12"
                 style={{ 
-                  transform: `rotate(-20deg) ${getWeaponTransform()}`,
+                  transform: `rotate(-12deg) ${getWeaponTransform()}`,
                   transition: 'transform 0.2s ease-in-out'
                 }}
               >
                 {/* Spear tip */}
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-3 h-8 bg-yellow-400 border border-yellow-300" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-3 h-6 bg-yellow-400 border border-yellow-300" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
                 {/* Spear binding */}
                 <div className="absolute top-8 left-0 right-0 h-2 bg-red-700 border border-yellow-500" />
               </div>
               
               {/* Spartan Shield */}
-              <div className="absolute top-18 -right-12 w-12 h-16 bg-gradient-to-b from-red-600 to-red-800 rounded-full border-3 border-yellow-400">
+              <div className="absolute top-16 -right-16 w-14 h-16 bg-gradient-to-b from-red-600 to-red-800 rounded-full border-4 border-yellow-400">
                 <div className="absolute inset-2 border-2 border-yellow-300 rounded-full" />
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-yellow-400 rounded-full">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-red-600 rounded-full" />
@@ -401,28 +401,28 @@ export function Boss({ boss }: BossProps) {
               </div>
               
               {/* War Skirt */}
-              <div className="absolute top-48 left-1/2 transform -translate-x-1/2 w-26 h-8 bg-red-800 border border-yellow-400">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="absolute bottom-0 h-6 w-4 bg-red-700 border border-yellow-400" style={{ left: `${2 + i * 5}px` }} />
+              <div className="absolute top-44 left-1/2 transform -translate-x-1/2 w-28 h-6 bg-red-800 border border-yellow-400">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="absolute bottom-0 h-8 w-4 bg-red-700 border border-yellow-400" style={{ left: `${2 + i * 4}px` }} />
                 ))}
               </div>
               
               {/* Muscular Legs */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-22 h-16">
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-16">
                 {/* Thighs */}
-                <div className="absolute top-0 left-2 w-7 h-8 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600" />
-                <div className="absolute top-0 right-2 w-7 h-8 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600" />
+                <div className="absolute top-0 left-2 w-8 h-8 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600 rounded" />
+                <div className="absolute top-0 right-2 w-8 h-8 bg-gradient-to-b from-orange-300 to-orange-400 border border-red-600 rounded" />
                 {/* Shin guards */}
-                <div className="absolute bottom-0 left-1 w-8 h-8 bg-red-800 border-2 border-yellow-400" />
-                <div className="absolute bottom-0 right-1 w-8 h-8 bg-red-800 border-2 border-yellow-400" />
+                <div className="absolute bottom-0 left-0 w-10 h-8 bg-red-800 border-2 border-yellow-400 rounded" />
+                <div className="absolute bottom-0 right-0 w-10 h-8 bg-red-800 border-2 border-yellow-400 rounded" />
               </div>
               
               {/* Red War Cloak */}
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 translate-x-8 w-18 h-32 bg-gradient-to-b from-red-600 to-red-900 border border-yellow-500 opacity-80 transform rotate-8" />
+              <div className="absolute top-20 right-0 w-16 h-32 bg-gradient-to-b from-red-600 to-red-900 border border-yellow-500 opacity-80 transform rotate-12 rounded-t" />
             </div>
 
             {/* War Aura */}
-            <div className="absolute -inset-8 bg-gradient-radial from-red-500 via-transparent to-transparent opacity-20 animate-pulse" />
+            <div className="absolute -inset-8 bg-gradient-radial from-red-500 via-transparent to-transparent opacity-20 animate-pulse rounded-full" />
           </div>
         ) : (
           /* Generic Boss - Mysterious Cloaked Figure */
