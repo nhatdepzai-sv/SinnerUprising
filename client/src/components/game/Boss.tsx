@@ -196,56 +196,146 @@ export function Boss({ boss }: BossProps) {
           </div>
         )}
         
-        {/* Boss main body - 64-bit style */}
+        {/* Boss main body - Giant Eye with Wings Design */}
         <div 
-          className={`w-32 h-40 bg-gradient-to-b ${getBossColor()} border-4 border-yellow-400 relative`}
+          className="relative w-64 h-48"
           style={{
             imageRendering: 'pixelated',
             filter: 'contrast(1.2) saturate(1.3)',
           }}
         >
-          {/* Pixelated boss design */}
-          <div className="absolute inset-0 grid grid-cols-8 grid-rows-10 gap-0">
-            {/* Create pixelated pattern */}
-            {Array.from({ length: 80 }).map((_, i) => {
-              const row = Math.floor(i / 8);
-              const col = i % 8;
-              let bgColor = 'transparent';
-              
-              // Boss outline pattern
-              if (row === 0 || row === 9 || col === 0 || col === 7) {
-                bgColor = 'bg-yellow-600';
-              } else if ((row === 2 || row === 3) && (col === 2 || col === 5)) {
-                // Eyes
-                bgColor = 'bg-red-500';
-              } else if (row === 4 && col >= 2 && col <= 5) {
-                // Mouth
-                bgColor = 'bg-black';
-              } else if (row >= 1 && row <= 8) {
-                // Body fill based on boss type
-                bgColor = boss.phase >= 3 ? 'bg-red-900' : boss.phase >= 2 ? 'bg-red-700' : 'bg-purple-600';
-              }
-              
-              return (
-                <div
+          {/* Left Wing */}
+          <div 
+            className={`absolute -left-24 top-8 w-32 h-24 bg-gradient-to-r ${
+              boss.phase >= 3 ? 'from-black via-red-900 to-purple-900' : 
+              boss.phase >= 2 ? 'from-gray-700 via-red-700 to-red-800' : 
+              'from-gray-600 via-purple-600 to-purple-700'
+            } border-4 border-yellow-400 transform -rotate-12`}
+            style={{
+              clipPath: 'polygon(0% 50%, 30% 0%, 100% 20%, 100% 80%, 30% 100%)',
+              animation: boss.phase >= 2 ? 'wingFlap 2s ease-in-out infinite' : 'wingFlap 3s ease-in-out infinite'
+            }}
+          >
+            {/* Wing feather details */}
+            <div className="absolute inset-2 space-y-1">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div 
                   key={i}
-                  className={`w-full h-full ${bgColor} ${boss.phase >= 2 ? 'animate-pulse' : ''}`}
-                  style={{ imageRendering: 'pixelated' }}
+                  className="h-1 bg-yellow-400 opacity-60"
+                  style={{ width: `${80 - i * 15}%` }}
                 />
-              );
-            })}
+              ))}
+            </div>
           </div>
-          
-          {/* Power aura */}
-          {boss.phase >= 2 && (
-            <div className="absolute inset-0 bg-red-500 opacity-20 animate-pulse" 
-                 style={{ clipPath: 'inherit' }} />
+
+          {/* Right Wing */}
+          <div 
+            className={`absolute -right-24 top-8 w-32 h-24 bg-gradient-to-l ${
+              boss.phase >= 3 ? 'from-black via-red-900 to-purple-900' : 
+              boss.phase >= 2 ? 'from-gray-700 via-red-700 to-red-800' : 
+              'from-gray-600 via-purple-600 to-purple-700'
+            } border-4 border-yellow-400 transform rotate-12`}
+            style={{
+              clipPath: 'polygon(0% 20%, 70% 0%, 100% 50%, 70% 100%, 0% 80%)',
+              animation: boss.phase >= 2 ? 'wingFlap 2s ease-in-out infinite 0.1s' : 'wingFlap 3s ease-in-out infinite 0.1s'
+            }}
+          >
+            {/* Wing feather details */}
+            <div className="absolute inset-2 space-y-1">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div 
+                  key={i}
+                  className="h-1 bg-yellow-400 opacity-60 ml-auto"
+                  style={{ width: `${80 - i * 15}%` }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Main Eye Body */}
+          <div 
+            className={`w-48 h-36 bg-gradient-radial ${
+              boss.phase >= 3 ? 'from-red-200 via-red-600 to-black' : 
+              boss.phase >= 2 ? 'from-white via-red-400 to-red-800' : 
+              'from-white via-purple-300 to-purple-800'
+            } border-8 border-yellow-400 rounded-full relative mx-auto`}
+          >
+            {/* Outer eye ring */}
+            <div className="absolute inset-4 bg-gradient-radial from-gray-800 to-black rounded-full border-4 border-gray-600">
+              
+              {/* Iris */}
+              <div className={`absolute inset-4 bg-gradient-radial ${
+                boss.phase >= 3 ? 'from-red-500 via-orange-500 to-red-900' : 
+                boss.phase >= 2 ? 'from-red-400 via-yellow-400 to-red-700' : 
+                'from-blue-400 via-purple-500 to-purple-800'
+              } rounded-full border-2 border-yellow-500`}>
+                
+                {/* Pupil */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-black rounded-full border-2 border-red-400">
+                  {/* Pupil reflection */}
+                  <div className="absolute top-1 left-1 w-2 h-2 bg-white rounded-full opacity-80" />
+                </div>
+                
+                {/* Iris patterns */}
+                {Array.from({ length: 8 }).map((_, i) => {
+                  const angle = (i / 8) * 360;
+                  return (
+                    <div
+                      key={i}
+                      className="absolute w-1 h-4 bg-yellow-400 opacity-60"
+                      style={{
+                        top: '50%',
+                        left: '50%',
+                        transformOrigin: '50% 50%',
+                        transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-8px)`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              
+              {/* Eye glow effect */}
+              {boss.phase >= 2 && (
+                <div className="absolute inset-0 bg-red-500 opacity-30 rounded-full animate-pulse" />
+              )}
+            </div>
+            
+            {/* Eye veins/details */}
+            <div className="absolute inset-0">
+              {Array.from({ length: 6 }).map((_, i) => {
+                const angle = (i / 6) * 360;
+                return (
+                  <div
+                    key={i}
+                    className="absolute w-0.5 h-8 bg-red-600 opacity-70"
+                    style={{
+                      top: '20%',
+                      left: '50%',
+                      transformOrigin: '50% 150%',
+                      transform: `translate(-50%, 0) rotate(${angle}deg)`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Eye lids (when damaged) */}
+          {boss.currentHealth < boss.maxHealth * 0.5 && (
+            <>
+              <div className="absolute top-0 left-8 right-8 h-4 bg-purple-800 opacity-80 rounded-t-full border-t-4 border-yellow-400" />
+              <div className="absolute bottom-0 left-8 right-8 h-4 bg-purple-800 opacity-80 rounded-b-full border-b-4 border-yellow-400" />
+            </>
           )}
           
-          {/* Ultimate phase effect */}
+          {/* Power aura around entire boss */}
+          {boss.phase >= 2 && (
+            <div className="absolute -inset-8 bg-red-500 opacity-10 rounded-full animate-pulse blur-md" />
+          )}
+          
+          {/* Ultimate phase dark aura */}
           {boss.phase >= 3 && (
-            <div className="absolute inset-0 bg-black opacity-40 animate-pulse" 
-                 style={{ clipPath: 'inherit' }} />
+            <div className="absolute -inset-12 bg-black opacity-20 rounded-full animate-pulse blur-lg" />
           )}
         </div>
         
@@ -314,6 +404,21 @@ export function Boss({ boss }: BossProps) {
           0% { transform: translateY(0) scale(1); opacity: 1; }
           50% { transform: translateY(-30px) scale(1.3); opacity: 1; }
           100% { transform: translateY(-60px) scale(0.9); opacity: 0; }
+        }
+        
+        @keyframes wingFlap {
+          0%, 100% { 
+            transform: rotateZ(0deg) rotateY(0deg) scaleY(1); 
+          }
+          25% { 
+            transform: rotateZ(-5deg) rotateY(-10deg) scaleY(0.9); 
+          }
+          50% { 
+            transform: rotateZ(5deg) rotateY(10deg) scaleY(1.1); 
+          }
+          75% { 
+            transform: rotateZ(-2deg) rotateY(-5deg) scaleY(0.95); 
+          }
         }
         
         @keyframes lightningStrike {

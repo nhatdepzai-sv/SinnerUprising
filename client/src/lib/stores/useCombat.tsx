@@ -288,12 +288,13 @@ export const useCombat = create<CombatState>()(
       set({ orbs: orbs.filter(o => o.id !== orbId) });
     },
     
-    // Cheat code: One-shot boss attack with skibidi army!
+    // Epic Skibidi Toilet Summoning Attack!
     executeSkibidiAttack: () => {
       const { currentBoss } = get();
-      if (currentBoss && currentBoss.currentHealth > 1) {
-        const damage = currentBoss.currentHealth - 1;
-        const newBossHealth = 1; // Leave boss with 1 HP
+      if (currentBoss && currentBoss.currentHealth > 0) {
+        // Calculate massive damage - completely destroy the boss after energy ball explosion
+        const damage = currentBoss.currentHealth; // Deal all remaining health as damage
+        const newBossHealth = 0; // Boss is defeated completely
         
         set({
           currentBoss: {
@@ -302,19 +303,24 @@ export const useCombat = create<CombatState>()(
           }
         });
         
-        get().addLogEntry('🎮 SKIBIDI ARMY SUMMONED!');
-        get().addLogEntry('💥 A thousand skibidis attack the boss!');
-        get().addLogEntry(`💥 Deals ${damage} EPIC damage to ${currentBoss.name}!`);
-        get().addLogEntry('🔥 Boss is almost defeated!');
-        get().addLogEntry('🎉 SKIBIDI POWER ACTIVATED!');
+        get().addLogEntry('🚽 SKIBIDI TOILET SUMMONED FROM THE VOID!');
+        get().addLogEntry('⚡ The toilet charges a massive energy ball!');
+        get().addLogEntry('💥 ENERGY BALL EXPLOSION!');
+        get().addLogEntry(`💥 Deals ${damage} DEVASTATING damage to ${currentBoss.name}!`);
+        get().addLogEntry('🔥 The boss is completely obliterated!');
+        get().addLogEntry('🎉 SKIBIDI TOILET POWER SUPREME!');
         
-        console.log('🎮 CHEAT: Skibidi attack deals', damage, 'damage!');
+        console.log('🚽 ULTIMATE SKIBIDI: Toilet deals', damage, 'explosive damage!');
         
-        // Trigger skibidi army visual effect
+        // Trigger epic skibidi toilet visual effect
         set({ skibidiArmyActive: true });
         setTimeout(() => {
           set({ skibidiArmyActive: false });
-        }, 3000);
+          // Trigger victory since boss is defeated
+          if (newBossHealth <= 0) {
+            set({ gamePhase: 'victory' });
+          }
+        }, 4000); // Longer duration for epic effect
       }
     },
 

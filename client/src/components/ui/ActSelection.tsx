@@ -28,7 +28,7 @@ export function ActSelection() {
   
   return (
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center">
-      <div className="max-w-6xl mx-auto p-8">
+      <div className="max-w-6xl mx-auto p-8 h-full flex flex-col">
         <div className="text-center mb-8">
           <h1 
             className="text-4xl font-bold text-white mb-4"
@@ -56,61 +56,83 @@ export function ActSelection() {
           )}
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {acts.map((act, index) => (
-            <button
-              key={act.id}
-              onClick={() => handleActSelect(act)}
-              disabled={!act.unlocked}
-              className={`p-6 border-2 transition-all transform hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed disabled:opacity-60 ${
-                getActStatusColor(act, index)
-              }`}
-              style={{
-                imageRendering: 'pixelated',
-                filter: 'contrast(1.2)',
-                borderRadius: '0px', // Remove rounded corners for pixelated look
-              }}
-            >
-              <div className="text-center">
-                <h3 className="text-xl font-bold text-white mb-2">{act.title}</h3>
-                <p className="text-sm text-gray-300 mb-4">{act.description}</p>
-                
-                <div className="flex justify-between items-center">
-                  <span className={`px-3 py-1 rounded text-xs font-semibold ${
-                    act.completed 
-                      ? 'bg-green-600 text-white'
-                      : act.unlocked
-                      ? 'bg-red-600 text-white' 
-                      : 'bg-gray-600 text-gray-300'
-                  }`}>
-                    {getActStatusText(act, index)}
-                  </span>
+        <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 pr-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {acts.map((act, index) => (
+              <button
+                key={act.id}
+                onClick={() => handleActSelect(act)}
+                disabled={!act.unlocked}
+                className={`p-6 border-2 transition-all transform hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed disabled:opacity-60 ${
+                  getActStatusColor(act, index)
+                }`}
+                style={{
+                  imageRendering: 'pixelated',
+                  filter: 'contrast(1.2)',
+                  borderRadius: '0px', // Remove rounded corners for pixelated look
+                }}
+              >
+                <div className="text-center">
+                  <div className="text-sm text-gray-400 mb-2">Chapter {index + 1}</div>
+                  <h3 className="text-xl font-bold text-white mb-2">{act.title}</h3>
+                  <p className="text-sm text-gray-300 mb-4">{act.description}</p>
                   
-                  {act.unlocked && !act.completed && (
-                    <span className="text-yellow-400 text-sm animate-pulse">
-                      Click to begin
+                  <div className="flex justify-between items-center">
+                    <span className={`px-3 py-1 rounded text-xs font-semibold ${
+                      act.completed 
+                        ? 'bg-green-600 text-white'
+                        : act.unlocked
+                        ? 'bg-red-600 text-white' 
+                        : 'bg-gray-600 text-gray-300'
+                    }`}>
+                      {getActStatusText(act, index)}
                     </span>
-                  )}
+                    
+                    {act.unlocked && !act.completed && (
+                      <span className="text-yellow-400 text-sm animate-pulse">
+                        Click to begin
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
         
-        <div className="text-center mt-8 text-gray-500">
+        <div className="text-center mt-8 text-gray-500 flex-shrink-0">
           <p>Your corruption grows with each divine life you take...</p>
           <p>But vengeance demands its price.</p>
           
-          <button
-            onClick={() => setGamePhase('map')}
-            className="mt-4 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded transition-colors"
-            style={{
-              fontFamily: 'monospace',
-              textShadow: '2px 2px 0px #000000'
-            }}
-          >
-            🗺️ EXPLORE MAP
-          </button>
+          <div className="flex gap-4 justify-center mt-4">
+            <button
+              onClick={() => setGamePhase('map')}
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded transition-colors"
+              style={{
+                fontFamily: 'monospace',
+                textShadow: '2px 2px 0px #000000'
+              }}
+            >
+              🗺️ EXPLORE MAP
+            </button>
+            
+            <button
+              onClick={() => {
+                // Start from chapter 1 if available
+                const firstChapter = acts.find(act => act.unlocked);
+                if (firstChapter) {
+                  handleActSelect(firstChapter);
+                }
+              }}
+              className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded transition-colors"
+              style={{
+                fontFamily: 'monospace',
+                textShadow: '2px 2px 0px #000000'
+              }}
+            >
+              ⚔️ START STORY
+            </button>
+          </div>
         </div>
       </div>
     </div>
