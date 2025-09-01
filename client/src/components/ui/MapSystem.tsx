@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCombat } from '../../lib/stores/useCombat';
 import { useStory } from '../../lib/stores/useStory';
+import { WeaponShop } from './WeaponShop';
+import { useWeaponShop } from '../../lib/stores/useWeaponShop';
 
 interface MapNode {
   id: string;
@@ -43,8 +45,10 @@ const mapNodes: MapNode[] = [
 export function MapSystem() {
   const [selectedNode, setSelectedNode] = useState<MapNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [showWeaponShop, setShowWeaponShop] = useState(false);
   const { startCombat } = useCombat();
-  const { acts, currentAct } = useStory();
+  const { acts, currentAct, addCorruption } = useStory();
+  const { addGold } = useWeaponShop();
 
   const getNodeColor = (node: MapNode) => {
     if (node.completed) return '#22c55e'; // Green
@@ -84,12 +88,21 @@ export function MapSystem() {
         alert('Gacha system coming soon! Collect powerful characters and equipment.');
         break;
       case 'shop':
-        // Open shop (placeholder)
-        alert('Divine Armory coming soon! Upgrade your weapons and abilities.');
+        // Open the weapon shop
+        setShowWeaponShop(true);
         break;
       case 'story':
-        // Play story cutscene (placeholder)
-        alert('Story cutscene: ' + selectedNode.description);
+        // Handle specific story locations
+        if (selectedNode.id === 'garden_gate') {
+          alert('🌿 You discover ancient runes carved into the gate. They whisper of forgotten secrets...\n\n💰 +50 gold found in the ruins!');
+          addGold(50);
+        } else if (selectedNode.id === 'garden_fountain') {
+          alert('⛲ The sacred waters still hold divine power. You feel your corruption lessening...\n\n🖤 Corruption reduced by 5 points!');
+          addCorruption(-5);
+        } else {
+          // Generic story interaction
+          alert('Story cutscene: ' + selectedNode.description);
+        }
         break;
       case 'event':
         // Trigger special event (placeholder)
@@ -304,6 +317,12 @@ export function MapSystem() {
           ← Back to Acts
         </button>
       </div>
+      
+      {/* Weapon Shop Modal */}
+      <WeaponShop 
+        isVisible={showWeaponShop} 
+        onClose={() => setShowWeaponShop(false)} 
+      />
     </div>
   );
 }

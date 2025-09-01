@@ -118,10 +118,16 @@ export function ActSelection() {
             
             <button
               onClick={() => {
-                // Start from chapter 1 if available
-                const firstChapter = acts.find(act => act.unlocked);
-                if (firstChapter) {
-                  handleActSelect(firstChapter);
+                // Find the next unfinished chapter (unlocked but not completed)
+                const nextChapter = acts.find(act => act.unlocked && !act.completed);
+                if (nextChapter) {
+                  handleActSelect(nextChapter);
+                } else {
+                  // If all chapters are completed, start from the beginning
+                  const firstChapter = acts.find(act => act.unlocked);
+                  if (firstChapter) {
+                    handleActSelect(firstChapter);
+                  }
                 }
               }}
               className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded transition-colors"
