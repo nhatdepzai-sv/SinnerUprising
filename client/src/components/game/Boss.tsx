@@ -16,6 +16,9 @@ export function Boss({ boss }: BossProps) {
   const [darkAura, setDarkAura] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
+  // Debug logging for boss rendering
+  console.log('Boss rendering:', boss.id, boss.name);
+  
   // Simple animation using React state
   useEffect(() => {
     const interval = setInterval(() => {
@@ -377,7 +380,7 @@ export function Boss({ boss }: BossProps) {
             {/* Card Border Glow */}
             <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-white to-yellow-400 rounded-xl opacity-60 blur-sm animate-pulse" style={{ zIndex: -1 }} />
           </div>
-        ) : boss.id === 'god_of_war' ? (
+        ) : (boss.id === 'god_of_war' || boss.name === 'Ares') ? (
           /* Ares - God of War Design */
           <div className="relative w-64 h-80">
             

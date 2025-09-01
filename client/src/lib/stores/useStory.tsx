@@ -73,6 +73,7 @@ export const useStory = create<StoryState>()(
         defeatedGods: updatedDefeatedGods
       });
       
+      console.log(`Completed act: ${actId}, unlocking next...`);
       get().unlockNextAct();
     },
     
@@ -89,8 +90,12 @@ export const useStory = create<StoryState>()(
           acts: updatedActs,
           currentAct: nextActIndex
         });
+        
+        console.log(`Unlocked act ${nextActIndex}: ${updatedActs[nextActIndex]?.title}`);
       } else {
-        // Reached final boss\n        set({ hasReachedFinalBoss: true });
+        // Reached final boss
+        set({ hasReachedFinalBoss: true });
+        console.log('Reached final boss!');
       }
     },
     
