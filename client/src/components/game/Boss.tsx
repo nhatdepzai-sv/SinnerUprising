@@ -196,7 +196,7 @@ export function Boss({ boss }: BossProps) {
           </div>
         )}
         
-        {/* Boss main body - Yu-Gi-Oh Card Design for Final Bosses */}
+        {/* Boss main body - Special designs for specific bosses */}
         {(boss.id === 'god_of_death' || boss.id === 'final_boss') ? (
           <div className="relative w-80 h-96 bg-gradient-to-b from-yellow-200 via-yellow-100 to-yellow-300 border-8 border-yellow-600 rounded-xl shadow-2xl">
             
@@ -376,6 +376,101 @@ export function Boss({ boss }: BossProps) {
             
             {/* Card Border Glow */}
             <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-white to-yellow-400 rounded-xl opacity-60 blur-sm animate-pulse" style={{ zIndex: -1 }} />
+          </div>
+        ) : boss.id === 'god_of_war' ? (
+          /* Ares - God of War Design */
+          <div className="relative w-64 h-80">
+            
+            {/* War God Armor Body */}
+            <div className="w-48 h-64 bg-gradient-to-b from-red-800 via-red-900 to-black rounded-lg border-4 border-yellow-500 relative mx-auto">
+              
+              {/* Helmet/Head */}
+              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-24 h-20 bg-gradient-to-b from-red-600 to-red-800 rounded-lg border-2 border-yellow-400 relative">
+                {/* Helmet Crest */}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-gradient-to-r from-yellow-400 to-red-500 rounded-t-full border-2 border-yellow-300" />
+                
+                {/* Glowing Red Eyes */}
+                <div className="absolute top-6 left-3 w-3 h-3 bg-red-400 rounded-full animate-pulse shadow-lg shadow-red-500" />
+                <div className="absolute top-6 right-3 w-3 h-3 bg-red-400 rounded-full animate-pulse shadow-lg shadow-red-500" />
+                
+                {/* Helmet Details */}
+                <div className="absolute inset-2 border border-yellow-400 rounded opacity-60" />
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-yellow-400 rounded" />
+              </div>
+
+              {/* Chest Armor */}
+              <div className="absolute top-20 left-4 right-4 h-24 bg-gradient-to-b from-red-700 to-red-900 rounded border-2 border-yellow-400 relative">
+                {/* War Insignia */}
+                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 border-2 border-yellow-400 rotate-45" />
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-yellow-400 rotate-45" />
+                
+                {/* Armor Plates */}
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div 
+                    key={i}
+                    className="absolute h-1 bg-yellow-400 opacity-70"
+                    style={{
+                      top: `${40 + i * 8}px`,
+                      left: '8px',
+                      right: '8px'
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Arms/Shoulders */}
+              <div className="absolute top-16 -left-4 w-12 h-16 bg-gradient-to-b from-red-700 to-red-900 rounded border-2 border-yellow-400 transform -rotate-12" />
+              <div className="absolute top-16 -right-4 w-12 h-16 bg-gradient-to-b from-red-700 to-red-900 rounded border-2 border-yellow-400 transform rotate-12" />
+
+              {/* War Weapons */}
+              <div className="absolute top-12 -left-8 w-2 h-20 bg-gradient-to-b from-yellow-400 to-red-600 rounded transform -rotate-12">
+                {/* Spear tip */}
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-4 bg-yellow-300 border border-yellow-500" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+              </div>
+              
+              <div className="absolute top-14 -right-8 w-6 h-12 bg-gradient-to-b from-red-600 to-red-800 rounded border border-yellow-400 transform rotate-12">
+                {/* Shield */}
+                <div className="absolute inset-1 border border-yellow-300 rounded opacity-80" />
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-yellow-400 rounded-full" />
+              </div>
+
+              {/* Lower Armor/Skirt */}
+              <div className="absolute bottom-4 left-6 right-6 h-16 bg-gradient-to-b from-red-800 to-black rounded-b border-2 border-yellow-400 relative">
+                {/* Armor segments */}
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div 
+                    key={i}
+                    className="absolute w-4 h-12 bg-red-700 border border-yellow-400 rounded-b"
+                    style={{
+                      bottom: '0px',
+                      left: `${8 + i * 12}px`
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* War Aura Effects */}
+              {boss.phase >= 2 && (
+                <>
+                  <div className="absolute inset-0 bg-red-500 opacity-20 rounded-lg animate-pulse" />
+                  <div className="absolute -inset-2 bg-orange-500 opacity-10 rounded-lg animate-pulse blur-sm" />
+                </>
+              )}
+
+              {/* Battle Scars (when damaged) */}
+              {boss.currentHealth < boss.maxHealth * 0.7 && (
+                <>
+                  <div className="absolute top-8 left-4 w-8 h-1 bg-black opacity-80 transform rotate-12" />
+                  <div className="absolute top-16 right-6 w-6 h-1 bg-black opacity-80 transform -rotate-12" />
+                </>
+              )}
+            </div>
+
+            {/* Divine War Aura */}
+            <div className="absolute -inset-4 bg-gradient-radial from-red-600 via-transparent to-transparent opacity-30 rounded-full animate-pulse" />
+            
+            {/* Ground Impact Effect */}
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-60 rounded-full blur-sm" />
           </div>
         ) : (
           /* Original Eye Design for Other Bosses */
