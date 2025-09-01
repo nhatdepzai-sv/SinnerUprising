@@ -196,16 +196,198 @@ export function Boss({ boss }: BossProps) {
           </div>
         )}
         
-        {/* Boss main body - Giant Eye with Wings Design */}
-        <div 
-          className="relative w-64 h-48"
-          style={{
-            imageRendering: 'pixelated',
-            filter: 'contrast(1.2) saturate(1.3)',
-          }}
-        >
-          {/* Left Wing */}
+        {/* Boss main body - Yu-Gi-Oh Card Design for Final Bosses */}
+        {(boss.id === 'god_of_death' || boss.id === 'final_boss') ? (
+          <div className="relative w-80 h-96 bg-gradient-to-b from-yellow-200 via-yellow-100 to-yellow-300 border-8 border-yellow-600 rounded-xl shadow-2xl">
+            
+            {/* Card Frame Header */}
+            <div className="absolute top-2 left-2 right-2 h-12 bg-gradient-to-r from-purple-800 via-blue-900 to-purple-800 rounded-lg border-2 border-yellow-500 flex items-center justify-center">
+              <h3 className="text-yellow-200 font-bold text-lg tracking-wider" style={{ fontFamily: 'serif' }}>
+                {boss.id === 'god_of_death' ? '🪽 SERAPHIM OF DEATH 🪽' : '⚡ THE GOD KILLER ⚡'}
+              </h3>
+            </div>
+
+            {/* Main Artwork Area */}
+            <div className="absolute top-16 left-4 right-4 h-48 bg-gradient-to-b from-blue-900 via-purple-800 to-black rounded-lg border-4 border-yellow-500 overflow-hidden">
+              
+              {boss.id === 'god_of_death' ? (
+                /* Seraphim of Death Design */
+                <div className="relative w-full h-full">
+                  {/* Heavenly Background */}
+                  <div className="absolute inset-0 bg-gradient-radial from-white via-blue-200 to-purple-900">
+                    <div className="absolute inset-0 opacity-30">
+                      {Array.from({ length: 20 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="absolute w-1 h-1 bg-yellow-300 rounded-full animate-pulse"
+                          style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 2}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Angel Figure */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {/* Halo */}
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-16 h-4 border-4 border-yellow-400 rounded-full bg-yellow-200 opacity-80" />
+                    
+                    {/* Head */}
+                    <div className="w-12 h-12 bg-gradient-to-b from-pink-200 to-pink-300 rounded-full border-2 border-yellow-500 relative">
+                      {/* Eyes */}
+                      <div className="absolute top-3 left-2 w-2 h-2 bg-blue-800 rounded-full" />
+                      <div className="absolute top-3 right-2 w-2 h-2 bg-blue-800 rounded-full" />
+                      {/* Mouth */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-1 bg-red-600 rounded-full opacity-80" />
+                    </div>
+
+                    {/* Body */}
+                    <div className="w-16 h-20 bg-gradient-to-b from-white via-gray-100 to-purple-300 rounded-lg border-2 border-yellow-500 relative -mt-2">
+                      {/* Divine Robes Details */}
+                      <div className="absolute inset-2 space-y-1">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <div key={i} className="h-1 bg-yellow-400 opacity-60 rounded" />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Six Wings (Seraphim) */}
+                    {Array.from({ length: 6 }).map((_, i) => {
+                      const angles = [-60, -30, 0, 30, 60, 90];
+                      const sizes = ['w-12 h-8', 'w-10 h-6', 'w-14 h-10', 'w-14 h-10', 'w-10 h-6', 'w-12 h-8'];
+                      return (
+                        <div
+                          key={i}
+                          className={`absolute ${sizes[i]} bg-gradient-to-r from-white via-yellow-200 to-gold-300 border-2 border-yellow-400 opacity-90`}
+                          style={{
+                            top: '20px',
+                            left: '8px',
+                            transformOrigin: '50% 100%',
+                            transform: `rotate(${angles[i]}deg)`,
+                            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                            animation: `wingFlap ${2 + Math.random()}s ease-in-out infinite ${i * 0.1}s`
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {/* Death Aura */}
+                  <div className="absolute inset-0 bg-black opacity-20 rounded-lg animate-pulse" />
+                </div>
+              ) : (
+                /* God Killer Design */
+                <div className="relative w-full h-full">
+                  {/* Dark Void Background */}
+                  <div className="absolute inset-0 bg-gradient-radial from-red-900 via-black to-purple-900">
+                    <div className="absolute inset-0 opacity-40">
+                      {Array.from({ length: 15 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="absolute w-2 h-2 bg-red-500 rounded-full animate-pulse"
+                          style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 3}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Corrupted Avatar */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {/* Dark Halo */}
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-16 h-4 border-4 border-red-500 rounded-full bg-black opacity-80" />
+                    
+                    {/* Corrupted Head */}
+                    <div className="w-12 h-12 bg-gradient-to-b from-gray-700 to-black rounded-full border-2 border-red-500 relative">
+                      {/* Glowing Red Eyes */}
+                      <div className="absolute top-3 left-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      <div className="absolute top-3 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      {/* Mouth */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-1 bg-red-600 rounded-full" />
+                    </div>
+
+                    {/* Dark Armor Body */}
+                    <div className="w-16 h-20 bg-gradient-to-b from-gray-800 via-black to-red-900 rounded-lg border-2 border-red-500 relative -mt-2">
+                      {/* Corruption Details */}
+                      <div className="absolute inset-2 space-y-1">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <div key={i} className="h-1 bg-red-500 opacity-80 rounded animate-pulse" />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Corrupted Wings */}
+                    {Array.from({ length: 4 }).map((_, i) => {
+                      const angles = [-45, -15, 15, 45];
+                      return (
+                        <div
+                          key={i}
+                          className="absolute w-14 h-10 bg-gradient-to-r from-black via-red-800 to-purple-900 border-2 border-red-500 opacity-80"
+                          style={{
+                            top: '20px',
+                            left: '8px',
+                            transformOrigin: '50% 100%',
+                            transform: `rotate(${angles[i]}deg)`,
+                            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                            animation: `wingFlap ${1.5 + Math.random()}s ease-in-out infinite ${i * 0.05}s`
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {/* Corruption Aura */}
+                  <div className="absolute inset-0 bg-red-900 opacity-30 rounded-lg animate-pulse" />
+                </div>
+              )}
+            </div>
+
+            {/* Card Stats Section */}
+            <div className="absolute bottom-16 left-4 right-4 h-16 bg-gradient-to-r from-purple-800 via-blue-900 to-purple-800 rounded-lg border-2 border-yellow-500 p-2">
+              <div className="grid grid-cols-2 gap-2 h-full">
+                <div className="bg-red-800 rounded border border-yellow-400 flex flex-col items-center justify-center">
+                  <span className="text-yellow-200 text-xs font-bold">ATK</span>
+                  <span className="text-white text-lg font-bold">{boss.phase >= 3 ? '3000' : boss.phase >= 2 ? '2500' : '2000'}</span>
+                </div>
+                <div className="bg-blue-800 rounded border border-yellow-400 flex flex-col items-center justify-center">
+                  <span className="text-yellow-200 text-xs font-bold">DEF</span>
+                  <span className="text-white text-lg font-bold">{boss.phase >= 3 ? '2500' : boss.phase >= 2 ? '2000' : '1500'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card Description */}
+            <div className="absolute bottom-2 left-4 right-4 h-12 bg-black bg-opacity-80 rounded border border-yellow-500 p-1">
+              <p className="text-yellow-200 text-xs text-center leading-tight">
+                {boss.id === 'god_of_death' 
+                  ? 'A divine seraphim corrupted by death itself. Its six wings spread judgment across mortals and gods alike.'
+                  : 'The ultimate corruption - a fallen champion wielding the power to slay gods and reshape reality.'}
+              </p>
+            </div>
+
+            {/* Holographic Foil Effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-yellow-400 to-transparent opacity-20 rounded-xl animate-pulse" />
+            
+            {/* Card Border Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-white to-yellow-400 rounded-xl opacity-60 blur-sm animate-pulse" style={{ zIndex: -1 }} />
+          </div>
+        ) : (
+          /* Original Eye Design for Other Bosses */
           <div 
+            className="relative w-64 h-48"
+            style={{
+              imageRendering: 'pixelated',
+              filter: 'contrast(1.2) saturate(1.3)',
+            }}
+          >
+            {/* Left Wing */}
+            <div 
             className={`absolute -left-24 top-8 w-32 h-24 bg-gradient-to-r ${
               boss.phase >= 3 ? 'from-black via-red-900 to-purple-900' : 
               boss.phase >= 2 ? 'from-gray-700 via-red-700 to-red-800' : 
@@ -337,7 +519,8 @@ export function Boss({ boss }: BossProps) {
           {boss.phase >= 3 && (
             <div className="absolute -inset-12 bg-black opacity-20 rounded-full animate-pulse blur-lg" />
           )}
-        </div>
+          </div>
+        )}
         
         {/* Boss name plate - pixelated */}
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-center">
